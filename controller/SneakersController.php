@@ -26,6 +26,8 @@ class SneakersController {
         "idColor" => "",
         "image" => ""
     ]) {
+        $values['companies'] = ProductDB::get_companies();
+        $values['colors'] = ProductDB::get_colors();
         echo ViewHelper::render("view/sneaker-add.php", $values);
     }
 

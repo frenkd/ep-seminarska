@@ -50,6 +50,30 @@ class ProductDB extends AbstractDB {
         }
     }
 
+    public static function get_colors() {
+        $colors = parent::query("SELECT id, name"
+                        . " FROM Color");
+        $color_return = array();
+        foreach ($colors as $c) {
+            $id = $c['id'];
+            $name = $c['name'];
+            $color_return[$id] = $name;
+        }
+        return $color_return;
+    }
+
+    public static function get_companies() {
+        $colors = parent::query("SELECT id, name"
+                        . " FROM Company");
+        $color_return = array();
+        foreach ($colors as $c) {
+            $id = $c['id'];
+            $name = $c['name'];
+            $color_return[$id] = $name;
+        }
+        return $color_return;
+    }
+
     public static function insert(array $params) {
         return parent::modify("INSERT INTO Product (title, description, size, price, active, idCompany, idColor) "
                         . " VALUES (:title, :description, :size, :price, :active, :idCompany, :idColor, :image)", $params);

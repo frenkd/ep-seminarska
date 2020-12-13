@@ -16,9 +16,23 @@
     <p><label>Price: <input type="number" name="price" value="<?= $price ?>" /></label></p>
     <p><label>Size: <input type="number" min="20" max="60" name="size" value="<?= $size ?>" /></label></p>
     <p><label>Active: <input type="number" min="0" max="1" name="active" value="<?= $active ?>" /></label></p>
-    <p><label>Company: <input type="number" name="idCompany" value="<?= $idCompany ?>" /></label></p>
-    <p><label>Color: <input type="number" name="idColor" value="<?= $idColor ?>" /></label></p>
+    <p><label>Color:
+        <select name="color" id="idColor">
+            <?php foreach ($colors as $id => $name): ?>
+                <option value="<?= $id ?>"><?= $name ?></option>
+            <?php endforeach; ?>
+        </select>
+    </label></p>
+    <p><label>Company:
+        <select name="company" id="idCompany">
+            <?php foreach ($companies as $id => $name): ?>
+                <option value="<?= $id ?>"><?= $name ?></option>
+            <?php endforeach; ?>
+        </select>
+    </label></p>
     <p><label>Image: <input type="text" name="image" value="<?= $image ?>" /></label></p>
     <p><label>Description: <br/><textarea name="description" cols="70" rows="10"><?= $description ?></textarea></label></p>
     <p><button>Insert</button></p>
 </form>
+
+<?= var_dump($companies) ?>
