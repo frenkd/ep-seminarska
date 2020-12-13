@@ -51,12 +51,6 @@ class BooksRESTController {
         // TODO: Implementiraj delete
         // Vrni kodo 204 v primeru uspeha oz. kodo 404, če knjiga ne obstaja
         // https://www.restapitutorial.com/httpstatuscodes.html
-        try {
-            ViewHelper::renderJSON(BookDB::get(["id" => $id]));
-            echo ViewHelper::renderJSON("", 204);
-            BookDB::delete(["id" => $id]);
-        } catch (InvalidArgumentException $e) {
-            echo ViewHelper::renderJSON($e->getMessage(), 404);
-        }
     }
+    
 }
