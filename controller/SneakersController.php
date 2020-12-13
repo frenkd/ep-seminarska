@@ -38,6 +38,7 @@ class SneakersController {
             $id = ProductDB::insert($data);
             echo ViewHelper::redirect(BASE_URL . "sneakers/" . $id);
         } else {
+            var_dump($data);
             self::addForm($data);
         }
     }
@@ -47,6 +48,8 @@ class SneakersController {
             $values = $params;
         } else if (is_numeric($params)) {
             $values = ProductDB::get(["id" => $params]);
+            $values['companies'] = ProductDB::get_companies();
+            $values['colors'] = ProductDB::get_colors();
         } else {
             throw new InvalidArgumentException("Cannot show form.");
         }
@@ -56,12 +59,13 @@ class SneakersController {
 
     public static function edit($id) {
         $data = filter_input_array(INPUT_POST, self::getRules());
-
+        var_dump($data);
         if (self::checkValues($data)) {
             $data["id"] = $id;
             ProductDB::update($data);
             ViewHelper::redirect(BASE_URL . "sneakers/" . $data["id"]);
         } else {
+            echo("Did not pass data check");
             self::editForm($data);
         }
     }
@@ -117,8 +121,7 @@ class SneakersController {
             'price' => FILTER_VALIDATE_FLOAT,
             'active' => FILTER_VALIDATE_INT,
             'idCompany' => FILTER_VALIDATE_INT,
-            'idColor' => FILTER_VALIDATE_INT,
-            'image' => FILTER_SANITIZE_SPECIAL_CHARS,
+            'idColor' => FILTER_VALIDATE_INT
         ];
     }
 

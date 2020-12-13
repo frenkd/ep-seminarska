@@ -76,18 +76,18 @@ class ProductDB extends AbstractDB {
 
     public static function insert(array $params) {
         return parent::modify("INSERT INTO Product (title, description, size, price, active, idCompany, idColor) "
-                        . " VALUES (:title, :description, :size, :price, :active, :idCompany, :idColor, :image)", $params);
+                        . " VALUES (:title, :description, :size, :price, :active, :idCompany, :idColor)", $params);
     }
 
     public static function update(array $params) {
         return parent::modify("UPDATE Product SET"
-        . "title = :title,"
-        . "description = :description,"
-        . "price = :price,"
-        . "active = :active,"
-        . "idCompany = :idCompany,"
-        . "idColor = :idColor,"
-        . "image = :image"
+        . " title = :title,"
+        . " description = :description,"
+        . " price = :price,"
+        . " size = :size,"
+        . " active = :active,"
+        . " idCompany = :idCompany,"
+        . " idColor = :idColor"
         . " WHERE id = :id", $params);
     }
 
@@ -96,7 +96,7 @@ class ProductDB extends AbstractDB {
     }
 
     public static function getAllwithURI(array $prefix) {
-        return parent::query("SELECT id, title, description, size, price, active, idCompany, idColor, "
+        return parent::query("SELECT id, title, description, size, price, active, idCompany, idColor"
                         . "CONCAT(:prefix, id) as uri "
                         . "FROM book "
                         . "ORDER BY id ASC", $prefix);
