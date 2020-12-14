@@ -11,6 +11,8 @@
 <a href="<?= BASE_URL . "sneakers/add" ?>">Add new</a>
 ]</p>
 
+
+
 <form action="<?= BASE_URL . "sneakers/add" ?>" method="post">
     <p><label>Title: <input type="text" name="title" value="<?= $title ?>" /></label></p>
     <p><label>Price: <input type="number" name="price" value="<?= $price ?>" /></label></p>

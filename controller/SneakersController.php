@@ -24,7 +24,6 @@ class SneakersController {
         "active" => "",
         "idCompany" => "",
         "idColor" => "",
-        "image" => ""
     ]) {
         $values['companies'] = ProductDB::get_companies();
         $values['colors'] = ProductDB::get_colors();
@@ -38,7 +37,6 @@ class SneakersController {
             $id = ProductDB::insert($data);
             echo ViewHelper::redirect(BASE_URL . "sneakers/" . $id);
         } else {
-            var_dump($data);
             self::addForm($data);
         }
     }
@@ -66,6 +64,7 @@ class SneakersController {
             ViewHelper::redirect(BASE_URL . "sneakers/" . $data["id"]);
         } else {
             echo("Did not pass data check");
+            $data["id"] = $id;
             self::editForm($data);
         }
     }
