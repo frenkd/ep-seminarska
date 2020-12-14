@@ -20,23 +20,13 @@ $urls = [
         SneakersController::get($id);
     },
     "/^sneakers\/add$/" => function ($method) {
-        if ($method == "POST") {
-            SneakersController::add();
-        } else {
-            SneakersController::addForm();
-        }
+        SneakersController::add();
     },
     "/^sneakers\/edit\/(\d+)$/" => function ($method, $id) {
-        if ($method == "POST") {
-            SneakersController::edit($id);
-        } else {
-            SneakersController::editForm($id);
-        }
+        SneakersController::edit(array('id' => $id));
     },
-    "/^sneakers\/delete\/(\d+)$/" => function ($method, $id) {
-        if ($method == "POST") {
-            SneakersController::delete($id);
-        }
+    "/^sneakers\/delete$/" => function () {
+        SneakersController::delete();
     },
     "/^sneakers\/(\d+)\/(foo|bar|baz)\/(\d+)$/" => function ($method, $id, $val, $num) {
         // primer kako definirati funkcijo, ki vzame dodatne parametre

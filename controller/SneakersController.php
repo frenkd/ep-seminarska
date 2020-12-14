@@ -3,125 +3,87 @@
 
 require_once("ViewHelper.php");
 require_once("model/ProductDB.php");
+require_once("forms/ProductForm.php");
 
 class SneakersController {
     
     public static function index() {
-        echo ViewHelper::render("view/sneaker-gallery.php", [
+        echo ViewHelper::render("view/product-gallery.php", [
             "sneakers" => ProductDB::getAll()
         ]);
     }
 
     public static function get($id) {
-        echo ViewHelper::render("view/sneaker-details.php", ProductDB::get(["id" => $id]));
-    }
-
-    public static function addForm($values = [
-        "title" => "",
-        "description" => "",
-        "size" => "",
-        "price" => "",
-        "active" => "",
-        "idCompany" => "",
-        "idColor" => "",
-    ]) {
-        $values['companies'] = ProductDB::get_companies();
-        $values['colors'] = ProductDB::get_colors();
-        echo ViewHelper::render("view/sneaker-add.php", $values);
+        echo ViewHelper::render("view/product-details.php", ProductDB::get(["id" => $id]));
     }
 
     public static function add() {
-        $data = filter_input_array(INPUT_POST, self::getRules());
+        $values['companies'] = ProductDB::get_companies();
+        $values['colors'] = ProductDB::get_colors();
+        $form = new ProductInsertForm("add_form");
 
-        if (self::checkValues($data)) {
-            $id = ProductDB::insert($data);
-            echo ViewHelper::redirect(BASE_URL . "sneakers/" . $id);
+        if ($form->validate()) {
+            $id = ProductDB::insert($form->getValue());
+            ViewHelper::redirect(BASE_URL . "sneakers/" . $id);
         } else {
-            self::addForm($data);
+            echo ViewHelper::render("view/product-form.php", [
+                "title" => "Add sneaker",
+                "form" => $form
+            ]);
         }
     }
 
-    public static function editForm($params) {
-        if (is_array($params)) {
-            $values = $params;
-        } else if (is_numeric($params)) {
-            $values = ProductDB::get(["id" => $params]);
-            $values['companies'] = ProductDB::get_companies();
-            $values['colors'] = ProductDB::get_colors();
-        } else {
-            throw new InvalidArgumentException("Cannot show form.");
-        }
+    public static function edit($params) {
+        $editForm = new ProductEditForm("edit_form");
+        $deleteForm = new ProductDeleteForm("delete_form");
 
-        echo ViewHelper::render("view/sneaker-edit.php", $values);
+        if ($editForm->isSubmitted()) {
+            if ($editForm->validate()) {
+                $data = $editForm->getValue();
+                ProductDB::update($data);
+                ViewHelper::redirect(BASE_URL . "sneakers/" . $id);
+            } else {
+                echo ViewHelper::render("view/product-form.php", [
+                    "title" => "Edit sneaker",
+                    "form" => $form,
+                    "deleteForm" => $deleteForm
+                ]);
+            }
+        } else {
+            if (is_numeric($params["id"])) {
+                $product = ProductDB::get($params);
+                $dataSource = new HTML_QuickForm2_DataSource_Array($product);
+                $editForm->addDataSource($dataSource);
+                $deleteForm->addDataSource($dataSource);
+
+                echo ViewHelper::render("view/product-form.php", [
+                    "title" => "Edit sneaker",
+                    "form" => $editForm,
+                    "deleteForm" => $deleteForm
+                ]);
+            } else {
+                throw new InvalidArgumentException("editing nonexistent entry");
+            }
+        }
     }
 
-    public static function edit($id) {
-        $data = filter_input_array(INPUT_POST, self::getRules());
+    public static function delete() {
+        $form = new ProductDeleteForm("delete_form");
+        $data = $form->getValue();
         var_dump($data);
-        if (self::checkValues($data)) {
-            $data["id"] = $id;
-            ProductDB::update($data);
-            ViewHelper::redirect(BASE_URL . "sneakers/" . $data["id"]);
+
+        if ($form->isSubmitted() && $form->validate()) {
+            ProductDB::delete($data);
+            ViewHelper::redirect(BASE_URL . "sneakers");
         } else {
-            echo("Did not pass data check");
-            $data["id"] = $id;
-            self::editForm($data);
+            if (isset($data["id"])) {
+                $url = BASE_URL . "sneakers/edit/" . $data["id"];
+            } else {
+                $url = BASE_URL . "sneakers";
+            }
+
+            ViewHelper::redirect($url);
         }
-    }
-
-    public static function delete($id) {
-        $data = filter_input_array(INPUT_POST, [
-            'delete_confirmation' => FILTER_REQUIRE_SCALAR
-        ]);
-
-        if (self::checkValues($data)) {
-            ProductDB::delete(["id" => $id]);
-            $url = BASE_URL . "sneakers";
-        } else {
-            $url = BASE_URL . "sneakers/edit/" . $id;
-        }
-
-        ViewHelper::redirect($url);
-    }
-
-    /**
-     * Returns TRUE if given $input array contains no FALSE values
-     * @param type $input
-     * @return type
-     */
-    public static function checkValues($input) {
-        if (empty($input)) {
-            return FALSE;
-        }
-
-        $result = TRUE;
-        foreach ($input as $value) {
-            $result = $result && $value != false;
-        }
-
-        return $result;
-    }
-
-    /**
-     * Returns an array of filtering rules for manipulation
-     * @return type
-     */
-    public static function getRules() {
-        return [
-            'title' => FILTER_SANITIZE_SPECIAL_CHARS,
-            'description' => FILTER_SANITIZE_SPECIAL_CHARS,
-            'size' => [
-                'filter' => FILTER_VALIDATE_INT,
-                'options' => [
-                    'min_range' => 20,
-                    'max_range' => 60
-                ]
-                ],
-            'price' => FILTER_VALIDATE_FLOAT,
-            'active' => FILTER_VALIDATE_INT,
-            'idCompany' => FILTER_VALIDATE_INT,
-            'idColor' => FILTER_VALIDATE_INT
-        ];
     }
 
 }
