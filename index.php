@@ -5,6 +5,7 @@ session_start();
 
 require_once("controller/SneakersController.php");
 require_once("controller/UserController.php");
+require_once("controller/SalesController.php");
 require_once("controller/BooksRESTController.php");
 
 define("BASE_URL", rtrim($_SERVER["SCRIPT_NAME"], "index.php"));
@@ -45,6 +46,15 @@ $urlsUser = [
     },
 ];
 
+$urlsSales = [
+    "/^users$/" => function ($method) {
+        SalesController::users();
+    },
+    "/^orders$/" => function ($method) {
+        SalesController::orders();
+    },
+];
+
 $urlsREST = [
     "/^$/" => function () {
         // Redirects to default url: /sneakers
@@ -74,7 +84,7 @@ $urlsREST = [
     }
 ];
 
-$urls = array_merge($urlsUser, $urlsProduct, $urlsREST);
+$urls = array_merge($urlsUser, $urlsSales, $urlsProduct, $urlsREST);
 
 foreach ($urls as $pattern => $controller) {
     if (preg_match($pattern, $path, $params)) {
