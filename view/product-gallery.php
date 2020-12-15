@@ -1,15 +1,5 @@
-<!DOCTYPE html>
-
-<link rel="stylesheet" type="text/css" href="<?= CSS_URL . "style.css" ?>">
-<meta charset="UTF-8" />
-<title>Sneaker World</title>
-
-<h1>All sneakers</h1>
-
-<p>[
-<a href="<?= BASE_URL . "sneakers" ?>">All sneakers</a> |
-<a href="<?= BASE_URL . "sneakers/add" ?>">Add new</a>
-]</p>
+<?php include("components/app-bar.php") ?>
+<h2>All sneakers</h2>
 
 <ul>
 

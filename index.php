@@ -4,6 +4,7 @@
 session_start();
 
 require_once("controller/SneakersController.php");
+require_once("controller/UserController.php");
 require_once("controller/BooksRESTController.php");
 
 define("BASE_URL", rtrim($_SERVER["SCRIPT_NAME"], "index.php"));
@@ -12,7 +13,7 @@ define("CSS_URL", rtrim($_SERVER["SCRIPT_NAME"], "index.php") . "static/css/");
 
 $path = isset($_SERVER["PATH_INFO"]) ? trim($_SERVER["PATH_INFO"], "/") : "";
 
-$urls = [
+$urlsProduct = [
     "/^sneakers$/" => function ($method) {
         SneakersController::index();
     },
@@ -32,7 +33,19 @@ $urls = [
         // primer kako definirati funkcijo, ki vzame dodatne parametre
         // http://localhost/netbeans/mvc-rest/books/1/foo/10
         echo "$id, $val, $num";
+    }
+];
+
+$urlsUser = [
+    "/^login$/" => function ($method) {
+        UserController::login();
     },
+    "/^register$/" => function ($method) {
+        UserController::register();
+    },
+];
+
+$urlsREST = [
     "/^$/" => function () {
         // Redirects to default url: /sneakers
         ViewHelper::redirect(BASE_URL . "sneakers");
@@ -58,8 +71,10 @@ $urls = [
                 BooksRESTController::index();
                 break;
         }
-    },
+    }
 ];
+
+$urls = array_merge($urlsUser, $urlsProduct, $urlsREST);
 
 foreach ($urls as $pattern => $controller) {
     if (preg_match($pattern, $path, $params)) {

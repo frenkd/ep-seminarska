@@ -18,8 +18,6 @@ class SneakersController {
     }
 
     public static function add() {
-        $values['companies'] = ProductDB::get_companies();
-        $values['colors'] = ProductDB::get_colors();
         $form = new ProductInsertForm("add_form");
 
         if ($form->validate()) {
