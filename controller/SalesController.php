@@ -7,7 +7,6 @@ require_once("model/OrdersDB.php");
 
 class SalesController {
     
-    
     public static function users() {
         echo ViewHelper::render("view/user-list.php", [
             "users" => UserDB::getAllInfo()

@@ -6,6 +6,7 @@ session_start();
 require_once("controller/SneakersController.php");
 require_once("controller/UserController.php");
 require_once("controller/SalesController.php");
+require_once("controller/AdminController.php");
 require_once("controller/BooksRESTController.php");
 
 define("BASE_URL", rtrim($_SERVER["SCRIPT_NAME"], "index.php"));
@@ -14,30 +15,14 @@ define("CSS_URL", rtrim($_SERVER["SCRIPT_NAME"], "index.php") . "static/css/");
 
 $path = isset($_SERVER["PATH_INFO"]) ? trim($_SERVER["PATH_INFO"], "/") : "";
 
-$urlsProduct = [
+$urlsAnon = [
+    "/^$/" => function () {
+        // Redirects to default url: /sneakers
+        ViewHelper::redirect(BASE_URL . "sneakers");
+    },
     "/^sneakers$/" => function ($method) {
         SneakersController::index();
     },
-    "/^sneakers\/(\d+)$/" => function ($method, $id) {
-        SneakersController::get($id);
-    },
-    "/^sneakers\/add$/" => function ($method) {
-        SneakersController::add();
-    },
-    "/^sneakers\/edit\/(\d+)$/" => function ($method, $id) {
-        SneakersController::edit(array('id' => $id));
-    },
-    "/^sneakers\/delete$/" => function () {
-        SneakersController::delete();
-    },
-    "/^sneakers\/(\d+)\/(foo|bar|baz)\/(\d+)$/" => function ($method, $id, $val, $num) {
-        // primer kako definirati funkcijo, ki vzame dodatne parametre
-        // http://localhost/netbeans/mvc-rest/books/1/foo/10
-        echo "$id, $val, $num";
-    }
-];
-
-$urlsUser = [
     "/^login$/" => function ($method) {
         UserController::login();
     },
@@ -46,20 +31,59 @@ $urlsUser = [
     },
 ];
 
+$urlsUser = [
+    "/^settings$/" => function ($method) {
+        UserController::settings();
+    },
+    "/^logout$/" => function ($method) {
+        session_destroy();
+        ViewHelper::redirect(BASE_URL . "sneakers");
+    },
+];
+
 $urlsSales = [
-    "/^users$/" => function ($method) {
+    "/^sales$/" => function ($method) {
+        SalesController::dashboard();
+    },
+    "/^sales\/users$/" => function ($method) {
         SalesController::users();
     },
-    "/^orders$/" => function ($method) {
+    "/^sales\/orders$/" => function ($method) {
         SalesController::orders();
+    },
+    "/^sales\/sneakers\/(\d+)$/" => function ($method, $id) {
+        SneakersController::get($id);
+    },
+    "/^sales\/sneakers\/add$/" => function ($method) {
+        SneakersController::add();
+    },
+    "/^sales\/sneakers\/edit\/(\d+)$/" => function ($method, $id) {
+        SneakersController::edit(array('id' => $id));
+    },
+    "/^sales\/sneakers\/delete$/" => function ($method) {
+        SneakersController::delete();
+    },
+];
+
+$urlsAdmin = [
+    "/^admin$/" => function ($method) {
+        AdminController::dashboard();
+    },
+    "/^admin\/salesmen$/" => function ($method) {
+        AdminController::salesmen();
+    },
+    "/^admin\/salesmen\/add$/" => function ($method) {
+        AdminController::salesmenAdd();
+    },
+    "/^admin\/salesmen\/edit\/(\d+)$/" => function ($method) {
+        AdminController::salesmenEdit();
+    },
+    "/^sales\/salesmen\/delete$/" => function ($method) {
+        AdminController::salesmenDelete();
     },
 ];
 
 $urlsREST = [
-    "/^$/" => function () {
-        // Redirects to default url: /sneakers
-        ViewHelper::redirect(BASE_URL . "sneakers");
-    },
     # REST API
     "/^api\/books\/(\d+)$/" => function ($method, $id) {
         // TODO: izbris knjige z uporabo HTTP metode DELETE
@@ -84,7 +108,7 @@ $urlsREST = [
     }
 ];
 
-$urls = array_merge($urlsUser, $urlsSales, $urlsProduct, $urlsREST);
+$urls = array_merge($urlsAnon, $urlsUser, $urlsSales, $urlsAdmin, $urlsREST);
 
 foreach ($urls as $pattern => $controller) {
     if (preg_match($pattern, $path, $params)) {

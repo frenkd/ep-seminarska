@@ -28,4 +28,16 @@ class AddressDB extends AbstractDB {
         }
     }
 
+    public static function insert(array $params) {
+        return parent::modify("INSERT INTO Address (street, idPost) "
+                        . " VALUES (:street, :idPost)", $params);
+    }
+
+    public static function update(array $params) {
+        return parent::modify("UPDATE Address SET"
+        . " street = :street,"
+        . " idPost = :idPost"
+        . " WHERE id = :idAddress", $params);
+    }
+
 }

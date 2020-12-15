@@ -7,11 +7,25 @@
 <h1>Sneaker world</h1>
 
 <!-- App bar for page navigation -->
-<?php if (!isset($_SESSION['user_id'])): ?>
     <a href="<?= BASE_URL . "sneakers" ?>">All sneakers</a> |
+<?php if (!isset($_SESSION['idUser'])): ?>
     <a href="<?= BASE_URL . "login" ?>">Login</a> |
-    <a href="<?= BASE_URL . "register" ?>">Register</a>
-<?php else: ?>
+    <a href="<?= BASE_URL . "register" ?>">Register</a> |
+<?php endif; ?>
+
+<!-- Salesman options -->
+<?php if (isset($_SESSION['idUser']) && $_SESSION['role'] == 'Salesman'): ?>
+    <a href="<?= BASE_URL . "sales/users" ?>">Users</a> |
+    <a href="<?= BASE_URL . "sales/products" ?>">Products</a> |
+<?php endif; ?>
+
+<!-- Admin options -->
+<?php if (isset($_SESSION['idUser']) && $_SESSION['role'] == 'Administrator'): ?>
+    <a href="<?= BASE_URL . "admin/salesmen" ?>">Salesmen</a> |
+<?php endif; ?>
+
+<!-- User settings and logout -->
+<?php if (isset($_SESSION['idUser'])): ?>
     <a href="<?= BASE_URL . "settings" ?>">Settings</a> |
-    <a href="<?= BASE_URL . "logout" ?>">Logout</a>
+    <a href="<?= BASE_URL . "logout" ?>">Logout</a> |
 <?php endif; ?>
