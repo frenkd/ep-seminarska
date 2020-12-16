@@ -194,6 +194,41 @@ class UserEditFormSales extends UserAbstractForm {
 
 }
 
+class UserEditForm extends UserAbstractForm {
+
+    public $id;
+
+    public function __construct($id) {
+        parent::__construct($id);
+
+        $this->fs->setLabel('Edit personal info of user');
+
+        $this->address = new HTML_QuickForm2_Container_Fieldset();
+        $this->address->setLabel('Address data');
+        $this->fs->addElement($this->address);
+
+        $this->button = new HTML_QuickForm2_Element_InputSubmit(null);
+        $this->button->setAttribute('value', 'Confirm');
+
+        $this->id = new HTML_QuickForm2_Element_InputHidden("id");
+        $this->addElement($this->id);
+
+        $this->idAddress = new HTML_QuickForm2_Element_InputHidden("idAddress");
+        $this->addElement($this->idAddress);
+
+        $this->personal->addElement($this->name);
+        $this->personal->addElement($this->surname);
+        $this->account->addElement($this->email);
+        $this->account->addElement($this->password);
+        $this->account->addElement($this->password2);
+        $this->address->addElement($this->street);
+        $this->address->addElement($this->idPost);
+        $this->fs->addElement($this->button);
+    }
+
+}
+
+
 class SalesmanEditForm extends UserAbstractForm {
 
     public $id;
