@@ -48,33 +48,36 @@ $urlsUser = [
     "/^user\/order\/(\d+)$/" => function ($method, $id) {
         UserController::orderDetails($id);
     },
-    "/^api\/user\/cartPurge$/" => function ($method) {
-        switch ($method) {
-            case "POST":
-                UserController::cartPurge();
-                break;
-        }
+    "/^user\/cartPurge$/" => function ($method) {
+        $previousUrl = $_POST['previousUrl'];
+        $idUser = $_SESSION['idUser'];
+        UserController::cartPurge($idUser, $previousUrl);
     },
-    "/^api\/user\/cart$/" => function ($method) {
-        switch ($method) {
-            case "POST":
-                $params = $_POST;
-                $params['quantity'] = 1;
-                UserController::cartAddItem($params);
-                break;
-            case "PUT":
-                $params = $_POST;
-                UserController::cartUpdateItem($params);
-                break;
-            case "DELETE":
-                echo "TEST";
-                // UserController::cartPurge($params);
-                break;
-        }
+    "/^user\/cart\/add$/" => function ($method) {
+        $params = [
+            'idProduct' => $_POST['idProduct'],
+            'previousUrl' => $_POST['previousUrl'],
+            'idUser' => $_SESSION['idUser']
+        ];
+        UserController::cartAddItem($params);
     },
-    "/^api\/user\/checkout$/" => function ($method) {
-        UserController::checkout();
+    "/^user\/cart\/update$/" => function ($method) {
+        $params = [
+            'idProduct' => $_POST['idProduct'],
+            'quantity' => $_POST['quantity'],
+            'previousUrl' => $_POST['previousUrl'],
+            'idUser' => $_SESSION['idUser']
+        ];
+        UserController::cartUpdateItem($params);
     },
+    "/^user\/checkout$/" => function ($method) {
+        $idUser = $_SESSION['idUser'];
+        UserController::checkoutView($idUser);
+    },
+    "/^user\/checkout\/confirm$/" => function ($method) {
+        $idUser = $_SESSION['idUser'];
+        UserController::checkout($idUser);
+    }
 ];
 
 $urlsSales = [

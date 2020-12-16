@@ -10,12 +10,11 @@
         if (count($cartItems) > 0) {
             foreach ($cartItems as $cartItem): ?>
                 <div>
-                    <form action="<?= BASE_URL ?>api/user/cart" method="PUT">
+                    <form action="<?= BASE_URL ?>user/cart/update" method="POST">
                         <a><b><?= $cartItem['title'] ?>:</b></a>
                         <a><?= number_format($cartItem['price'], 2) ?>€</a>
-                        <input type="hidden" name="do" value="update_cart" />
                         <input type="hidden" name="idProduct" value="<?= $cartItem['idProduct']  ?>" />
-                        <input type="hidden" name="idUser" value="<?= $user['idUser']  ?>" />
+                        <input type="hidden" name="previousUrl" value="<?= $_SERVER['REQUEST_URI']  ?>" />
                         <input type="number" name="quantity" value="<?= $cartItem['quantity']  ?>">
                         <button type="submit">Update</button>
                     </form>
@@ -30,13 +29,14 @@
     ?>
         <hr>
         <div>
-            <form action="<?= BASE_URL ?>api/user/cartPurge" method="POST">
+            <form action="<?= BASE_URL ?>user/cartPurge" method="POST">
                 <b>Total amount: <?= number_format($sum, 2) ?>€</b>
+                <input type="hidden" name="previousUrl" value="<?= $_SERVER['REQUEST_URI']  ?>" />
                 <button type="submit">Clear cart</button>
             </form>
         </div>
         <div>
-            <form action="<?= BASE_URL ?>api/user/checkout" method="POST">
+            <form action="<?= BASE_URL ?>user/checkout" method="POST">
                 <input type="hidden" name="idUser" value="<?= $user['idUser']  ?>" />
                 <button type="submit">Checkout</button>
             </form>

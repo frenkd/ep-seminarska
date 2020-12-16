@@ -69,7 +69,24 @@ class OrdersDB extends AbstractDB {
             . " LEFT JOIN Company ON Product.idCompany = Company.id"
             . " LEFT JOIN Color ON Product.idCompany = Color.id"
             . " WHERE oi.idOrder = :id", $order);
+    }
 
+    public static function getCartItems(array $user) {
+        return parent::query(
+            "SELECT"
+            . " oi.idProduct as idProduct,"
+            . " Product.title as title,"
+            . " Company.name as company,"
+            . " Color.name as color,"
+            . " Product.price as price,"
+            . " Product.size as size,"
+            . " oi.quantity as quantity,"
+            . " (Product.price * oi.quantity) as amount"
+            . " FROM CartItem as oi"
+            . " LEFT JOIN Product ON oi.idProduct = Product.id"
+            . " LEFT JOIN Company ON Product.idCompany = Company.id"
+            . " LEFT JOIN Color ON Product.idCompany = Color.id"
+            . " WHERE oi.idUser = :id", $user);
     }
 
     public static function insertOrder(array $user) {

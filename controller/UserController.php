@@ -3,6 +3,7 @@
 
 require_once("ViewHelper.php");
 require_once("forms/UserForm.php");
+require_once("forms/CheckoutForm.php");
 require_once("model/UserDB.php");
 require_once("model/OrdersDB.php");
 require_once("model/CartDB.php");
@@ -114,17 +115,35 @@ class UserController {
     }
 
     public static function cartAddItem($params) {
+        // TODO: Add item to cart (increment)
         CartDB::cartAddItem($params);
+        ViewHelper::redirect($params['previousUrl']);
     }
 
-    public static function cartPurge() {
-        $user = ['idUser' => $_SESSION['idUser']];
-        CartDB::cartPurge($user);
+    public static function cartUpdateItem($params) {
+        // TODO: Update cart
+        CartDB::cartUpdateQuantity($params);
+        ViewHelper::redirect($params['previousUrl']);
     }
 
-    public static function checkout() {
-        $user = ['idUser' => $_SESSION['idUser']];
-        CartDB::checkout($user);
+    public static function cartPurge($idUser, $previousUrl) {
+        var_dump($idUser);
+        CartDB::cartPurge(['idUser' => $idUser]);
+        ViewHelper::redirect($previousUrl);
     }
 
+    public static function checkoutView($idUser) {
+        $checkoutForm = new CheckoutForm("confirm_checkout_form",);
+        echo ViewHelper::render("view/checkout.php", [
+            "orderItems" => OrdersDB::getCartItems(['id' => $idUser]),
+            "checkoutForm" => $checkoutForm
+        ]);
+    }
+
+    public static function checkout($idUser) {
+        CartDB::checkout(['idUser' => $idUser]);
+        ViewHelper::redirect(BASE_URL . "sales/orders");
+    }
+
+    
 }
