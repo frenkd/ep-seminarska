@@ -17,6 +17,7 @@
                 <td><?= $u["timestamp"] ?> </td>
                 <td><?= $u["idUser"] ?> </td>
                 <td><?= $u["email"] ?> </td>
+                <td><?= $u["amount"] ?> </td>
             </tr>
         <?php endforeach; ?>
         

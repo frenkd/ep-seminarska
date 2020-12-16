@@ -5,6 +5,7 @@ require_once("ViewHelper.php");
 require_once("model/UserDB.php");
 require_once("model/PostDB.php");
 require_once("forms/UserForm.php");
+require_once("model/OrdersDB.php");
 
 
 class UserController {
@@ -97,6 +98,18 @@ class UserController {
                 "form" => $formSuperuser
             ]);
         }
+    }
+
+    public static function orders() {
+        echo ViewHelper::render("view/user-order-list.php", [
+            "orders" => OrdersDB::getUserOrders(['idUser' => $_SESSION['idUser']])
+        ]);
+    }
+
+    public static function orderDetails($id) {
+        echo ViewHelper::render("view/user-order-list.php", [
+            "orders" => OrdersDB::getOrderItems(['id' => $id])
+        ]);
     }
 
 }

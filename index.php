@@ -42,6 +42,12 @@ $urlsUser = [
         session_destroy();
         ViewHelper::redirect(BASE_URL . "sneakers");
     },
+    "/^user\/orders$/" => function ($method) {
+        UserController::orders();
+    },
+    "/^user\/orders\/(\d+)$/" => function ($method, $id) {
+        UserController::orderDetails($id);
+    },
 ];
 
 $urlsSales = [

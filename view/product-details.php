@@ -1,6 +1,6 @@
 <title>Sneaker details</title>
 
-<h1>Details of: <?= $title ?></h1>
+<h2>Details of: <?= $title ?></h2>
 
 <ul>
     <li>id: <b><?= $id ?></b></li>    
