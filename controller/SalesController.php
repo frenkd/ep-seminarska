@@ -5,6 +5,7 @@ require_once("ViewHelper.php");
 require_once("model/UserDB.php");
 require_once("model/OrdersDB.php");
 require_once("forms/UserForm.php");
+require_once("forms/OrderForm.php");
 
 class SalesController {
     
@@ -13,13 +14,7 @@ class SalesController {
             "users" => UserDB::getAllInfo()
         ]);
     }
-
-    public static function orders() {
-        echo ViewHelper::render("view/sales-order-list.php", [
-            "orders" => OrdersDB::getAllInfo()
-        ]);
-    }
-    
+   
     public static function userAdd() {
         $form = new RegisterForm("register_form");
 
@@ -85,6 +80,39 @@ class SalesController {
             }
             ViewHelper::redirect($url);
         }
+    }
+
+    public static function orders() {
+        echo ViewHelper::render("view/sales-order-list.php", [
+            "orders" => OrdersDB::getAllInfo()
+        ]);
+    }
+
+    public static function orderDetails(array $id) {
+        $confirmForm = new OrderStatusForm("confirm_order_form", $id['id'], "confirm");
+        $cancelForm = new OrderStatusForm("cancel_order_form", $id['id'], "cancel");
+        $revokeForm = new OrderStatusForm("revoke_order_form", $id['id'], "revoke");
+
+        $params = [
+            "order" => OrdersDB::get($id),
+            "orderItems" => OrdersDB::getOrderItems($id),
+        ];
+
+        if ($params['order']['status'] == 'Pending') {
+            $params["confirmForm"] = $confirmForm;
+            $params["cancelForm"] = $cancelForm;
+        }
+        else if ($params['order']['status'] == 'Confirmed') {
+            $params["revokeForm"] = $revokeForm;
+        }
+        echo ViewHelper::render("view/sales-order-details.php", $params);
+    }
+
+    public static function updateOrderStatus($order) {
+        var_dump($order);
+        OrdersDB::updateOrderStatus($order);
+        $url = BASE_URL . "sales/orders";
+        ViewHelper::redirect($url);
     }
 
 }

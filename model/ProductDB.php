@@ -27,7 +27,6 @@ class ProductDB extends AbstractDB {
         $products = parent::query("SELECT id, title, description, size, price, active, idCompany, idColor"
                         . " FROM Product"
                         . " WHERE id = :id", $id);
-
         if (count($products) == 1) {
             $product = $products[0];
             // Get company and color

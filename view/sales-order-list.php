@@ -23,6 +23,5 @@
                 </td>
             </tr>
         <?php endforeach; ?>
-        
     </table>
 </ul>

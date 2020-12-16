@@ -99,6 +99,18 @@ $urlsSales = [
     "/^sales\/orders$/" => function ($method) {
         SalesController::orders();
     },
+    "/^sales\/order\/(\d+)$/" => function ($method, $id) {
+        SalesController::orderDetails(['id' => $id]);
+    },
+    "/^sales\/order\/confirm$/" => function ($method) {
+        SalesController::updateOrderStatus(['idOrder' => $_POST['idOrder'], 'idStatus' => '2']);
+    },
+    "/^sales\/order\/cancel$/" => function ($method) {
+        SalesController::updateOrderStatus(['idOrder' => $_POST['idOrder'], 'idStatus' => '3']);
+    },
+    "/^sales\/order\/revoke$/" => function ($method) {
+        SalesController::updateOrderStatus(['idOrder' => $_POST['idOrder'], 'idStatus' => '4']);
+    },
     "/^sales\/users$/" => function ($method) {
         SalesController::users();
     },

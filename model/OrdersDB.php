@@ -19,8 +19,29 @@ class OrdersDB extends AbstractDB {
             . " ORDER BY id ASC");
     }
 
+    public static function get(array $id) {
+        $orders =  parent::query(
+            "SELECT"
+            . " Orders.id as id,"
+            . " OrderStatus.status as status,"
+            . " Orders.timestamp as timestamp,"
+            . " Orders.idUser as idUser,"
+            . " User.email as email,"
+            . " (SELECT SUM(price) FROM OrderItem WHERE OrderItem.idOrder = Orders.id) as amount"
+            . " FROM Orders"
+            . " LEFT JOIN User ON Orders.idUser = User.id"
+            . " LEFT JOIN OrderStatus ON OrderStatus.id = Orders.idStatus"
+            . " WHERE Orders.id = :id"
+            . " ORDER BY id ASC", $id);
+        if (count($orders) == 1) {
+            return $orders[0];
+        } else {
+            throw new InvalidArgumentException("No such order");
+        }
+    }
+
     public static function getUserOrders(array $user) {
-        return parent::query(
+        $orders = parent::query(
             "SELECT"
             . " Orders.id as id,"
             . " OrderStatus.status as status,"
@@ -73,6 +94,14 @@ class OrdersDB extends AbstractDB {
             . " LEFT JOIN Product ON CartItem.idProduct = Product.id"
             . " WHERE CartItem.idUser = :idUser"
             , $orderItems);
+    }
+
+    public static function updateOrderStatus(array $order) {
+        return parent::modify(
+            "UPDATE Orders SET"
+            . " idStatus = :idStatus"
+            . " WHERE id = :idOrder"
+            , $order);
     }
 
 }
