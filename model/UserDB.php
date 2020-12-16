@@ -78,6 +78,7 @@ class UserDB extends AbstractDB {
     }
 
     public static function updateSettingsSuperuser(array $params) {
+        $params["password"] = password_hash($params["password"], PASSWORD_BCRYPT);
         return parent::modify("UPDATE User SET"
         . " name = :name,"
         . " surname = :surname,"
@@ -88,6 +89,7 @@ class UserDB extends AbstractDB {
     }
 
     public static function updateSettingsUser(array $params) {
+        $params["password"] = password_hash($params["password"], PASSWORD_BCRYPT);
         AddressDB::update($params);
         return parent::modify("UPDATE User SET"
         . " name = :name,"
