@@ -71,8 +71,10 @@ class UserDB extends AbstractDB {
         $params["idAddress"] = AddressDB::insert($params);
         $params["idRole"] = 1; // Default when registering: Registred user
         $params["active"] = 1; // Default when registering: Active
-        return parent::modify("INSERT INTO User (name, surname, email, password, active, idAddress, idRole) "
-                        . " VALUES (:name, :surname, :email, :password, :active, :idAddress, :idRole)", $params);
+        $params["password"] = password_hash($params["password"], PASSWORD_BCRYPT);
+        return parent::modify(
+            "INSERT INTO User (name, surname, email, password, active, idAddress, idRole) "
+            . " VALUES (:name, :surname, :email, :password, :active, :idAddress, :idRole)", $params);
     }
 
     public static function updateSettingsSuperuser(array $params) {
@@ -101,15 +103,21 @@ class UserDB extends AbstractDB {
             . " User.id as id,"
             . " User.name as name,"
             . " User.email as email,"
+            . " User.password as password,"
             . " Role.role as role"
             . " FROM User"
             . " LEFT JOIN Role ON User.idRole = Role.id"
-            . " WHERE User.email = :email AND User.password = :password"
+            . " WHERE User.email = :email"
             . " ORDER BY id ASC", $params);
-
         if (count($users) == 1) {
             $user = $users[0];
-            return $user;
+            // check if the password on the database matches the given password
+            if (password_verify ($params["password"] , $user["password"])) {
+                return $user;
+            }
+            else {
+                throw new InvalidArgumentException("Incorrect password");
+            }
         } else {
             throw new InvalidArgumentException("No user with such user info");
         }

@@ -13,12 +13,21 @@ class UserController {
         $form = new LoginForm("login_form");
 
         if ($form->validate()) {
-            $user = UserDB::login($form->getValue());
-            $_SESSION['email'] = $user['email'];
-            $_SESSION['name'] = $user['name'];
-            $_SESSION['idUser'] = $user['id'];
-            $_SESSION['role'] = $user['role'];
-            ViewHelper::redirect(BASE_URL . "sneakers/" . $id);
+
+            try {
+                $user = UserDB::login($form->getValue());
+                $_SESSION['email'] = $user['email'];
+                $_SESSION['name'] = $user['name'];
+                $_SESSION['idUser'] = $user['id'];
+                $_SESSION['role'] = $user['role'];
+                // echo '<script>alert("' . $user['name'] . '")</script>';
+                ViewHelper::redirect(BASE_URL . "sneakers/" . $id);
+            } catch (Exception $e) {
+                echo '<script>alert("' . $e->getMessage() . '")</script>';
+                echo ViewHelper::render("view/login.php", [
+                    "form" => $form
+                ]);
+            }
         } else {
             echo ViewHelper::render("view/login.php", [
                 "form" => $form

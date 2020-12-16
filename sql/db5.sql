@@ -15,16 +15,31 @@ CREATE SCHEMA IF NOT EXISTS `sneakers` DEFAULT CHARACTER SET utf8 COLLATE utf8_s
 USE `sneakers` ;
 
 -- -----------------------------------------------------
+-- Table `sneakers`.`Post`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `sneakers`.`Post` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `idAddress_UNIQUE` (`id` ASC) VISIBLE)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
 -- Table `sneakers`.`Address`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `sneakers`.`Address` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `street` VARCHAR(45) NOT NULL,
-  `street_number` INT NOT NULL,
-  `post_name` VARCHAR(45) NOT NULL,
-  `post_number` INT(4) NOT NULL,
+  `idPost` INT NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE INDEX `idAddress_UNIQUE` (`id` ASC) VISIBLE)
+  UNIQUE INDEX `idAddress_UNIQUE` (`id` ASC) VISIBLE,
+  INDEX `fk_Address_Post1_idx` (`idPost` ASC) VISIBLE,
+  CONSTRAINT `fk_Address_Post1`
+    FOREIGN KEY (`idPost`)
+    REFERENCES `sneakers`.`Post` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
@@ -77,12 +92,11 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `sneakers`.`Order`
+-- Table `sneakers`.`Orders`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `sneakers`.`Order` (
+CREATE TABLE IF NOT EXISTS `sneakers`.`Orders` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `status` INT NOT NULL,
-  `amount` DOUBLE NOT NULL,
   `timestamp` DATETIME NOT NULL,
   `idUser` INT NOT NULL,
   PRIMARY KEY (`id`, `idUser`),
@@ -137,15 +151,15 @@ ENGINE = InnoDB;
 -- Table `sneakers`.`OrderItem`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `sneakers`.`OrderItem` (
-  `amount` DOUBLE NOT NULL,
   `quantity` INT NOT NULL,
   `idOrder` INT NOT NULL,
   `idProduct` INT NOT NULL,
+  `price` DOUBLE NOT NULL,
   PRIMARY KEY (`idOrder`, `idProduct`),
   INDEX `fk_OrderItem_Product1_idx` (`idProduct` ASC) VISIBLE,
   CONSTRAINT `fk_OrderItem_Order1`
     FOREIGN KEY (`idOrder`)
-    REFERENCES `sneakers`.`Order` (`id`)
+    REFERENCES `sneakers`.`Orders` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_OrderItem_Product1`
@@ -179,14 +193,31 @@ SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
 -- -----------------------------------------------------
+-- Data for table `sneakers`.`Post`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `sneakers`;
+INSERT INTO `sneakers`.`Post` (`id`, `name`) VALUES (1000, 'Ljubljana');
+INSERT INTO `sneakers`.`Post` (`id`, `name`) VALUES (2000, 'Maribor');
+INSERT INTO `sneakers`.`Post` (`id`, `name`) VALUES (3000, 'Celje');
+INSERT INTO `sneakers`.`Post` (`id`, `name`) VALUES (4000, 'Kranj');
+INSERT INTO `sneakers`.`Post` (`id`, `name`) VALUES (5000, 'Nova Gorica');
+INSERT INTO `sneakers`.`Post` (`id`, `name`) VALUES (6000, 'Koper');
+INSERT INTO `sneakers`.`Post` (`id`, `name`) VALUES (8000, 'Novo mesto');
+INSERT INTO `sneakers`.`Post` (`id`, `name`) VALUES (9000, 'Murska Sobota');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
 -- Data for table `sneakers`.`Address`
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `sneakers`;
-INSERT INTO `sneakers`.`Address` (`id`, `street`, `street_number`, `post_name`, `post_number`) VALUES (1, 'Celovška', 1, 'Ljubljana', 1000);
-INSERT INTO `sneakers`.`Address` (`id`, `street`, `street_number`, `post_name`, `post_number`) VALUES (2, 'Celovška', 2, 'Ljubljana', 1000);
-INSERT INTO `sneakers`.`Address` (`id`, `street`, `street_number`, `post_name`, `post_number`) VALUES (3, 'Celovška', 3, 'Ljubljana', 1000);
-INSERT INTO `sneakers`.`Address` (`id`, `street`, `street_number`, `post_name`, `post_number`) VALUES (4, 'Celovška', 4, 'Ljubljana', 1000);
+INSERT INTO `sneakers`.`Address` (`id`, `street`, `idPost`) VALUES (1, 'Celovška 1', 1000);
+INSERT INTO `sneakers`.`Address` (`id`, `street`, `idPost`) VALUES (2, 'Celovška 2', 1000);
+INSERT INTO `sneakers`.`Address` (`id`, `street`, `idPost`) VALUES (3, 'Celovška 3', 1000);
+INSERT INTO `sneakers`.`Address` (`id`, `street`, `idPost`) VALUES (4, 'Celovška 4', 1000);
 
 COMMIT;
 
@@ -208,10 +239,10 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `sneakers`;
-INSERT INTO `sneakers`.`User` (`id`, `name`, `surname`, `email`, `password`, `active`, `idAddress`, `idRole`) VALUES (DEFAULT, 'Andrej', 'Adminkovič', 'aa@mail.net', 'ep', 1, 1, 3);
-INSERT INTO `sneakers`.`User` (`id`, `name`, `surname`, `email`, `password`, `active`, `idAddress`, `idRole`) VALUES (DEFAULT, 'Brane', 'Blažič', 'bb@mail.net', 'ep', 1, 2, 2);
-INSERT INTO `sneakers`.`User` (`id`, `name`, `surname`, `email`, `password`, `active`, `idAddress`, `idRole`) VALUES (DEFAULT, 'Cene', 'Cenilec', 'cc@mail.net', 'ep', 1, 3, 2);
-INSERT INTO `sneakers`.`User` (`id`, `name`, `surname`, `email`, `password`, `active`, `idAddress`, `idRole`) VALUES (DEFAULT, 'Zdravko', 'Zapravljivec', 'zz@mail.net', 'ep', 1, 4, 1);
+INSERT INTO `sneakers`.`User` (`id`, `name`, `surname`, `email`, `password`, `active`, `idAddress`, `idRole`) VALUES (DEFAULT, 'Andrej', 'Adminkovič', 'aa@mail.net', '$2y$10$C77MaUw0yrJS6sDs/X/88OuKjIVg7Jx//IX/R50WvOgBQ2kwBfTtC', 1, 1, 3);
+INSERT INTO `sneakers`.`User` (`id`, `name`, `surname`, `email`, `password`, `active`, `idAddress`, `idRole`) VALUES (DEFAULT, 'Brane', 'Blažič', 'bb@mail.net', '$2y$10$C77MaUw0yrJS6sDs/X/88OuKjIVg7Jx//IX/R50WvOgBQ2kwBfTtC', 1, 2, 2);
+INSERT INTO `sneakers`.`User` (`id`, `name`, `surname`, `email`, `password`, `active`, `idAddress`, `idRole`) VALUES (DEFAULT, 'Cene', 'Cenilec', 'cc@mail.net', '$2y$10$C77MaUw0yrJS6sDs/X/88OuKjIVg7Jx//IX/R50WvOgBQ2kwBfTtC', 1, 3, 2);
+INSERT INTO `sneakers`.`User` (`id`, `name`, `surname`, `email`, `password`, `active`, `idAddress`, `idRole`) VALUES (DEFAULT, 'Zdravko', 'Zapravljivec', 'zz@mail.net', '$2y$10$C77MaUw0yrJS6sDs/X/88OuKjIVg7Jx//IX/R50WvOgBQ2kwBfTtC', 1, 4, 1);
 
 COMMIT;
 
