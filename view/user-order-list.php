@@ -1,7 +1,7 @@
 <h2>My orders</h2>
 
 <ul>
-    <table style="width:100%">
+    <table style="width:50%">
         <tr><b>
             <td><b>Status</b></td>
             <td><b>Timestamp</b></td>
@@ -13,7 +13,7 @@
                 <td><?= $u["timestamp"] ?> </td>
                 <td><?= $u["amount"] ?> </td>
                 <td>
-                    <a href="<?= BASE_URL . "user/order/" . $u["id"] ?>">Edit</a>
+                    <a href="<?= BASE_URL . "user/order/" . $u["id"] ?>">Details</a>
                 </td>
             </tr>
         <?php endforeach; ?>

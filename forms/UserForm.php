@@ -47,7 +47,7 @@ class UserAbstractForm extends HTML_QuickForm2 {
 
         $this->idPost = new HTML_QuickForm2_Element_Select('idPost');
         $this->idPost->setLabel("Post");
-        $this->idPost->loadOptions(PostDB::getAll());
+        $this->idPost->loadOptions(AddressDB::getAllPosts());
         $this->idPost->addRule('required', 'Izberi pošto.');
 
         $this->email = new HTML_QuickForm2_Element_InputText('email');

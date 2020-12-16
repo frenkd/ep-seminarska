@@ -10,4 +10,13 @@
     <li>Description: <i><?= $description ?></i></li>
     <li>Company: <i><?= $company ?></i></li>
     <li>Color: <i><?= $color ?></i></li>
+
+    <!-- Registred customer options -->
+    <?php if (isset($_SESSION['idUser']) && $_SESSION['role'] == 'Registred customer'): ?>
+        <form action="<?= BASE_URL ?>api/user/cart" method="POST">
+            <input type="hidden" name="idProduct" value="<?= $id ?>" />
+            <input type="hidden" name="idUser" value="<?= $_SESSION['idUser'] ?>" />
+            <button type="submit">Add to cart</button>
+        </form>
+    <?php endif; ?>
 </ul>

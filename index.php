@@ -45,8 +45,35 @@ $urlsUser = [
     "/^user\/orders$/" => function ($method) {
         UserController::orders();
     },
-    "/^user\/orders\/(\d+)$/" => function ($method, $id) {
+    "/^user\/order\/(\d+)$/" => function ($method, $id) {
         UserController::orderDetails($id);
+    },
+    "/^api\/user\/cartPurge$/" => function ($method) {
+        switch ($method) {
+            case "POST":
+                UserController::cartPurge();
+                break;
+        }
+    },
+    "/^api\/user\/cart$/" => function ($method) {
+        switch ($method) {
+            case "POST":
+                $params = $_POST;
+                $params['quantity'] = 1;
+                UserController::cartAddItem($params);
+                break;
+            case "PUT":
+                $params = $_POST;
+                UserController::cartUpdateItem($params);
+                break;
+            case "DELETE":
+                echo "TEST";
+                // UserController::cartPurge($params);
+                break;
+        }
+    },
+    "/^api\/user\/checkout$/" => function ($method) {
+        UserController::checkout();
     },
 ];
 

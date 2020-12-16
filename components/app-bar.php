@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <link rel="stylesheet" type="text/css" href="<?= CSS_URL . "style.css" ?>">
 <meta charset="UTF-8" />
 <title>Sneaker World</title>
@@ -23,6 +22,7 @@
 <?php if (isset($_SESSION['idUser']) && $_SESSION['role'] == 'Salesman'): ?>
     <a href="<?= BASE_URL . "sales/users" ?>">Users</a> |
     <a href="<?= BASE_URL . "sales/products" ?>">Products</a> |
+    <a href="<?= BASE_URL . "sales/orders" ?>">Orders</a> |
 <?php endif; ?>
 
 <!-- Admin options -->
@@ -33,5 +33,10 @@
 <!-- Settings and logout -->
 <?php if (isset($_SESSION['idUser'])): ?>
     <a href="<?= BASE_URL . "settings" ?>">Settings</a> |
-    <a href="<?= BASE_URL . "logout" ?>">Logout</a> |
+    <a href="<?= BASE_URL . "logout" ?>">Logout</a>
+<?php endif; ?>
+
+<!-- Cart -->
+<?php if (isset($_SESSION['idUser']) && $_SESSION['role'] == 'Registred customer'): ?>
+    <?php include "components/cart.php"; ?>
 <?php endif; ?>

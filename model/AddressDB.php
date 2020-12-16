@@ -40,4 +40,17 @@ class AddressDB extends AbstractDB {
         . " WHERE id = :idAddress", $params);
     }
 
+    public static function getAllPosts() {
+        $posts = parent::query("SELECT id, name"
+                            . " FROM Post"
+                            . " ORDER BY id ASC");
+        $posts_return = array();
+        foreach ($posts as $c) {
+            $id = $c['id'];
+            $name = $c['id'] . " " .$c['name'];
+            $posts_return[$id] = $name;
+        }
+        return $posts_return;
+    }
+
 }

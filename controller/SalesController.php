@@ -14,7 +14,7 @@ class SalesController {
     }
 
     public static function orders() {
-        echo ViewHelper::render("view/order-list.php", [
+        echo ViewHelper::render("view/sales-order-list.php", [
             "orders" => OrdersDB::getAllInfo()
         ]);
     }

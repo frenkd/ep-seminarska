@@ -2,10 +2,11 @@
 
 
 require_once("ViewHelper.php");
-require_once("model/UserDB.php");
-require_once("model/PostDB.php");
 require_once("forms/UserForm.php");
+require_once("model/UserDB.php");
 require_once("model/OrdersDB.php");
+require_once("model/CartDB.php");
+
 
 
 class UserController {
@@ -107,9 +108,23 @@ class UserController {
     }
 
     public static function orderDetails($id) {
-        echo ViewHelper::render("view/user-order-list.php", [
-            "orders" => OrdersDB::getOrderItems(['id' => $id])
+        echo ViewHelper::render("view/user-order-details.php", [
+            "orderItems" => OrdersDB::getOrderItems(['id' => $id])
         ]);
+    }
+
+    public static function cartAddItem($params) {
+        CartDB::cartAddItem($params);
+    }
+
+    public static function cartPurge() {
+        $user = ['idUser' => $_SESSION['idUser']];
+        CartDB::cartPurge($user);
+    }
+
+    public static function checkout() {
+        $user = ['idUser' => $_SESSION['idUser']];
+        CartDB::checkout($user);
     }
 
 }
