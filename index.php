@@ -84,17 +84,17 @@ $urlsSales = [
     "/^sales\/products$/" => function ($method) {
         ProductController::displayAllSales();
     },
-    "/^sales\/products\/(\d+)$/" => function ($method, $id) {
+    "/^sales\/product\/(\d+)$/" => function ($method, $id) {
         ProductController::productDetail($id);
     },
-    "/^sales\/products\/add$/" => function ($method) {
+    "/^sales\/product\/add$/" => function ($method) {
         ProductController::productAdd();
     },
-    "/^sales\/products\/edit\/(\d+)$/" => function ($method, $id) {
+    "/^sales\/product\/edit\/(\d+)$/" => function ($method, $id) {
         ProductController::productEdit(array('id' => $id));
     },
-    "/^sales\/products\/delete$/" => function ($method) {
-        ProductController::productDelete();
+    "/^sales\/product\/delete$/" => function ($method) {
+        ProductController::productDelete(['id' => $_POST['id']]);
     },
     "/^sales\/orders$/" => function ($method) {
         SalesController::orders();
@@ -102,14 +102,14 @@ $urlsSales = [
     "/^sales\/users$/" => function ($method) {
         SalesController::users();
     },
-    "/^admin\/salesmen\/add$/" => function ($method) {
+    "/^sales\/user\/add$/" => function ($method) {
         SalesController::userAdd();
     },
-    "/^admin\/salesmen\/edit\/(\d+)$/" => function ($method) {
-        SalesController::userEdit();
+    "/^sales\/user\/edit\/(\d+)$/" => function ($method, $id) {
+        SalesController::userEdit($id);
     },
-    "/^sales\/salesmen\/delete$/" => function ($method) {
-        SalesController::userDelete();
+    "/^sales\/user\/delete$/" => function ($method, $id) {
+        SalesController::userDelete($id);
     },
 ];
 

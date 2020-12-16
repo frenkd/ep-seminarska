@@ -115,7 +115,7 @@ class ProductDeleteForm extends HTML_QuickForm2 {
     public $id;
 
     public function __construct($id) {
-        parent::__construct($id, "post", ["action" => BASE_URL . "sneakers/delete"]);
+        parent::__construct($id, "post", ["action" => BASE_URL . "sales/product/delete"]);
 
         $this->id = new HTML_QuickForm2_Element_InputHidden("id");
         $this->addElement($this->id);

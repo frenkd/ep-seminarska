@@ -62,7 +62,6 @@ class UserAbstractForm extends HTML_QuickForm2 {
         $this->password = new HTML_QuickForm2_Element_InputPassword('password');
         $this->password->setLabel('Choose password:');
         $this->password->setAttribute('size', 15);
-        $this->password->addRule('required', 'Vnesite password.');
         $this->password->addRule('minlength', 'password naj vsebuje vsaj 6 znakov.', 6);
         $this->password->addRule('regex', 'V geslu uporabite vsaj 1 številko.', '/[0-9]+/');
         $this->password->addRule('regex', 'V geslu uporabite vsaj 1 veliko črko.', '/[A-Z]+/');
@@ -71,7 +70,6 @@ class UserAbstractForm extends HTML_QuickForm2 {
         $this->password2 = new HTML_QuickForm2_Element_InputPassword('password2');
         $this->password2->setLabel('Repeat password:');
         $this->password2->setAttribute('size', 15);
-        $this->password2->addRule('required', 'Ponovno vpišite izbrano password.');
         $this->password2->addRule('eq', 'Gesli nista enaki.', $this->password);
 
         $this->fs = new HTML_QuickForm2_Container_Fieldset();
@@ -141,6 +139,9 @@ class RegisterForm extends UserAbstractForm {
         $this->button = new HTML_QuickForm2_Element_InputSubmit(null);
         $this->button->setAttribute('value', 'Register');
 
+        $this->password->addRule('required', 'Choose a password.');
+        $this->password2->addRule('required', 'Repeat password.');
+
         $this->personal->addElement($this->name);
         $this->personal->addElement($this->surname);
         $this->account->addElement($this->email);
@@ -153,7 +154,7 @@ class RegisterForm extends UserAbstractForm {
 
 }
 
-class UserEditForm extends UserAbstractForm {
+class UserEditFormSales extends UserAbstractForm {
 
     public $id;
 
@@ -175,9 +176,15 @@ class UserEditForm extends UserAbstractForm {
         $this->idAddress = new HTML_QuickForm2_Element_InputHidden("idAddress");
         $this->addElement($this->idAddress);
 
+        $this->active = new HTML_QuickForm2_Element_Select('active');
+        $this->active->loadOptions(array('1' => 'Yes', '0' => 'No'));
+        $this->active->setLabel('Is active');
+        $this->active->addRule('required', 'Provide some text.');
+
         $this->personal->addElement($this->name);
         $this->personal->addElement($this->surname);
         $this->account->addElement($this->email);
+        $this->account->addElement($this->active);
         $this->account->addElement($this->password);
         $this->account->addElement($this->password2);
         $this->address->addElement($this->street);
@@ -210,6 +217,41 @@ class SalesmanEditForm extends UserAbstractForm {
         $this->account->addElement($this->email);
         $this->account->addElement($this->password);
         $this->account->addElement($this->password2);
+        $this->fs->addElement($this->button);
+    }
+
+}
+
+
+class UserDeleteForm extends UserAbstractForm {
+
+    public $id;
+
+    public function __construct($id) {
+        parent::__construct($id);
+
+        $this->fs->setLabel('Edit personal info of user');
+
+        $this->address = new HTML_QuickForm2_Container_Fieldset();
+        $this->address->setLabel('Address data');
+        $this->fs->addElement($this->address);
+
+        $this->button = new HTML_QuickForm2_Element_InputSubmit(null);
+        $this->button->setAttribute('value', 'Confirm');
+
+        $this->id = new HTML_QuickForm2_Element_InputHidden("id");
+        $this->addElement($this->id);
+
+        $this->idAddress = new HTML_QuickForm2_Element_InputHidden("idAddress");
+        $this->addElement($this->idAddress);
+
+        $this->personal->addElement($this->name);
+        $this->personal->addElement($this->surname);
+        $this->account->addElement($this->email);
+        $this->account->addElement($this->password);
+        $this->account->addElement($this->password2);
+        $this->address->addElement($this->street);
+        $this->address->addElement($this->idPost);
         $this->fs->addElement($this->button);
     }
 

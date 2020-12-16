@@ -45,11 +45,11 @@ class ProductController {
             if ($editForm->validate()) {
                 $data = $editForm->getValue();
                 ProductDB::update($data);
-                ViewHelper::redirect(BASE_URL . "sneakers/" . $id);
+                ViewHelper::redirect(BASE_URL . "sales/products" . $id);
             } else {
                 echo ViewHelper::render("view/product-form.php", [
                     "title" => "Edit sneaker",
-                    "form" => $form,
+                    "form" => $editForm,
                     "deleteForm" => $deleteForm
                 ]);
             }
@@ -74,14 +74,17 @@ class ProductController {
     public static function productDelete() {
         $form = new ProductDeleteForm("delete_form");
         $data = $form->getValue();
-        var_dump($data);
 
         if ($form->isSubmitted() && $form->validate()) {
-            ProductDB::delete($data);
-            ViewHelper::redirect(BASE_URL . "sneakers");
+            try {
+                ProductDB::delete($data);
+                ViewHelper::redirect(BASE_URL . "sneakers");
+            } catch (Exception $e) {
+                echo ("Cannot delete this product (it has probably been ordered)");
+            }
         } else {
             if (isset($data["id"])) {
-                $url = BASE_URL . "sneakers/edit/" . $data["id"];
+                $url = BASE_URL . "sales/product/edit/" . $data["id"];
             } else {
                 $url = BASE_URL . "sneakers";
             }

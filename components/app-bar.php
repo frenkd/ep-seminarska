@@ -21,7 +21,9 @@
 <!-- Salesman options -->
 <?php if (isset($_SESSION['idUser']) && $_SESSION['role'] == 'Salesman'): ?>
     <a href="<?= BASE_URL . "sales/users" ?>">Users</a> |
+    <a href="<?= BASE_URL . "sales/user/add" ?>">Add User</a> |
     <a href="<?= BASE_URL . "sales/products" ?>">Products</a> |
+    <a href="<?= BASE_URL . "sales/product/add" ?>">Add product</a> |
     <a href="<?= BASE_URL . "sales/orders" ?>">Orders</a> |
 <?php endif; ?>
 

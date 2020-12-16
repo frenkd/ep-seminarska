@@ -18,6 +18,9 @@
                 <td><?= $u["idUser"] ?> </td>
                 <td><?= $u["email"] ?> </td>
                 <td><?= $u["amount"] ?> </td>
+                <td>
+                    <a href="<?= BASE_URL . "sales/order/" . $u["id"] ?>">Edit</a>
+                </td>
             </tr>
         <?php endforeach; ?>
         

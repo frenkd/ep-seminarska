@@ -13,15 +13,15 @@
         </tr>
         <?php foreach ($products as $u): ?>
             <tr>
-                <td><?= $u["id"] ?> </td>
-                <td><?= $u["title"] ?> </td>
-                <td><?= $u["price"] ?> </td>
-                <td><?= $u["size"] ?> </td>
-                <td><?= $u["company"] ?> </td>
-                <td><?= $u["color"] ?> </td>
-                <td><?= $u["active"] ?> </td>
+                <td><?= $u["id"] ?></td>
+                <td><a href="<?= BASE_URL . "sales/product/" . $u["id"] ?>"><?= $u["title"] ?></a></td>
+                <td><?= $u["price"] ?></td>
+                <td><?= $u["size"] ?></td>
+                <td><?= $u["company"] ?></td>
+                <td><?= $u["color"] ?></td>
+                <td><?= $u["active"] ?></td>
                 <td>
-                    <a href="<?= BASE_URL . "sales/product/" . $u["id"] ?>">Edit</a>
+                    <a href="<?= BASE_URL . "sales/product/edit/" . $u["id"] ?>">Edit</a>
                 </td>
             </tr>
         <?php endforeach; ?>

@@ -78,6 +78,31 @@ class UserDB extends AbstractDB {
             . " VALUES (:name, :surname, :email, :password, :active, :idAddress, :idRole)", $params);
     }
 
+    public static function update(array $params) {
+        AddressDB::update($params);
+
+        if ($params['password'] == "") {
+            return parent::modify("UPDATE User SET"
+                . " name = :name,"
+                . " surname = :surname,"
+                . " email = :email,"
+                . " active = :active"
+                . " WHERE id = :id", $params);
+        }
+        else {
+            $params["password"] = password_hash($params["password"], PASSWORD_BCRYPT);
+            return parent::modify("UPDATE User SET"
+                . " name = :name,"
+                . " surname = :surname,"
+                . " email = :email,"
+                . " password = :password,"
+                . " active = :active"
+                . " WHERE id = :id", $params);
+        }
+
+        
+    }
+
     public static function updateSettingsSuperuser(array $params) {
         $params["password"] = password_hash($params["password"], PASSWORD_BCRYPT);
         return parent::modify("UPDATE User SET"
