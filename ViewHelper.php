@@ -7,6 +7,7 @@ class ViewHelper {
         extract($variables);
 
         ob_start();
+        include("components/app-bar.php");
         include($file);
         return ob_get_clean();
     }

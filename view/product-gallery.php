@@ -1,4 +1,3 @@
-<?php include("components/app-bar.php") ?>
 <h2>All sneakers</h2>
 
 <ul>

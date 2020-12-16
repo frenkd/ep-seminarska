@@ -1,4 +1,3 @@
-<?php include("components/app-bar.php") ?>
 <h2>All users</h2>
 
 <ul>
@@ -23,6 +22,9 @@
                 <td><?= $u["street"] ?> </td>
                 <td><?= $u["post"] ?> </td>
                 <td><?= $u["role"] ?> </td>
+                <td>
+                    <a href="<?= BASE_URL . "sales/user/" . $u["id"] ?>">Edit</a>
+                </td>
             </tr>
         <?php endforeach; ?>
         

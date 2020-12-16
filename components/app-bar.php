@@ -6,11 +6,17 @@
 
 <h1>Sneaker world</h1>
 
-<!-- App bar for page navigation -->
-    <a href="<?= BASE_URL . "sneakers" ?>">All sneakers</a> |
+<!-- Anonymous user -->
 <?php if (!isset($_SESSION['idUser'])): ?>
+    <a href="<?= BASE_URL . "sneakers" ?>">All sneakers</a> |
     <a href="<?= BASE_URL . "login" ?>">Login</a> |
     <a href="<?= BASE_URL . "register" ?>">Register</a> |
+<?php endif; ?>
+
+<!-- Registred customer options -->
+<?php if (isset($_SESSION['idUser']) && $_SESSION['role'] == 'Registred customer'): ?>
+    <a href="<?= BASE_URL . "sneakers" ?>">All sneakers</a> |
+    <a href="<?= BASE_URL . "user/orders" ?>">My orders</a> |
 <?php endif; ?>
 
 <!-- Salesman options -->
@@ -24,7 +30,7 @@
     <a href="<?= BASE_URL . "admin/salesmen" ?>">Salesmen</a> |
 <?php endif; ?>
 
-<!-- User settings and logout -->
+<!-- Settings and logout -->
 <?php if (isset($_SESSION['idUser'])): ?>
     <a href="<?= BASE_URL . "settings" ?>">Settings</a> |
     <a href="<?= BASE_URL . "logout" ?>">Logout</a> |

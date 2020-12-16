@@ -5,8 +5,21 @@ require_once 'model/AbstractDB.php';
 class ProductDB extends AbstractDB {
 
     public static function getAll() {
+        return parent::query(
+            "SELECT"
+            ." p.id, p.title, p.description, p.size,"
+            ." p.price, p.active, p.idCompany, p.idColor,"
+            ." Color.name as color, Company.name as company"
+            . " FROM Product p"
+            . " LEFT JOIN Company ON Company.id = p.idCompany"
+            . " LEFT JOIN Color ON Color.id = p.idColor"
+            . " ORDER BY id ASC");
+    }
+
+    public static function getAllActive() {
         return parent::query("SELECT id, title, description, size, price, active, idCompany, idColor"
                         . " FROM Product"
+                        . " WHERE active = '1'"
                         . " ORDER BY id ASC");
     }
 

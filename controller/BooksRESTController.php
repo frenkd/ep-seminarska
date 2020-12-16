@@ -1,7 +1,7 @@
 <?php
 
 require_once("model/ProductDB.php");
-require_once("controller/SneakersController.php");
+require_once("controller/ProductController.php");
 require_once("ViewHelper.php");
 
 class BooksRESTController {
@@ -21,9 +21,9 @@ class BooksRESTController {
     }
 
     public static function add() {
-        $data = filter_input_array(INPUT_POST, SneakersController::getRules());
+        $data = filter_input_array(INPUT_POST, ProductController::getRules());
 
-        if (SneakersController::checkValues($data)) {
+        if (ProductController::checkValues($data)) {
             $id = ProductDB::insert($data);
             echo ViewHelper::renderJSON("", 201);
             ViewHelper::redirect(BASE_URL . "api/books/$id");
@@ -36,9 +36,9 @@ class BooksRESTController {
         // spremenljivka $_PUT ne obstaja, zato jo moremo narediti sami
         $_PUT = [];
         parse_str(file_get_contents("php://input"), $_PUT);
-        $data = filter_var_array($_PUT, SneakersController::getRules());
+        $data = filter_var_array($_PUT, ProductController::getRules());
 
-        if (SneakersController::checkValues($data)) {
+        if (ProductController::checkValues($data)) {
             $data["id"] = $id;
             ProductDB::update($data);
             echo ViewHelper::renderJSON("", 200);

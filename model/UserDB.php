@@ -21,6 +21,7 @@ class UserDB extends AbstractDB {
             . " LEFT JOIN Address ON User.idAddress = Address.id"
             . " LEFT JOIN Post ON Address.idPost = Post.id"
             . " LEFT JOIN Role ON User.idRole = Role.id"
+            . " WHERE Role.role = 'Registred customer'"
             . " ORDER BY id ASC");
     }
 

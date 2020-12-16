@@ -5,19 +5,25 @@ require_once("ViewHelper.php");
 require_once("model/ProductDB.php");
 require_once("forms/ProductForm.php");
 
-class SneakersController {
+class ProductController {
     
-    public static function index() {
+    public static function displayAllActive() {
         echo ViewHelper::render("view/product-gallery.php", [
-            "sneakers" => ProductDB::getAll()
+            "sneakers" => ProductDB::getAllActive()
         ]);
     }
 
-    public static function get($id) {
+    public static function displayAllSales() {
+        echo ViewHelper::render("view/product-list.php", [
+            "products" => ProductDB::getAll()
+        ]);
+    }
+
+    public static function productDetail($id) {
         echo ViewHelper::render("view/product-details.php", ProductDB::get(["id" => $id]));
     }
 
-    public static function add() {
+    public static function productAdd() {
         $form = new ProductInsertForm("add_form");
 
         if ($form->validate()) {
@@ -31,7 +37,7 @@ class SneakersController {
         }
     }
 
-    public static function edit($params) {
+    public static function productEdit($params) {
         $editForm = new ProductEditForm("edit_form");
         $deleteForm = new ProductDeleteForm("delete_form");
 
@@ -65,7 +71,7 @@ class SneakersController {
         }
     }
 
-    public static function delete() {
+    public static function productDelete() {
         $form = new ProductDeleteForm("delete_form");
         $data = $form->getValue();
         var_dump($data);

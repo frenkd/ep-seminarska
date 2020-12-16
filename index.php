@@ -3,7 +3,7 @@
 // enables sessions for the entire app
 session_start();
 
-require_once("controller/SneakersController.php");
+require_once("controller/ProductController.php");
 require_once("controller/UserController.php");
 require_once("controller/SalesController.php");
 require_once("controller/AdminController.php");
@@ -21,7 +21,10 @@ $urlsAnon = [
         ViewHelper::redirect(BASE_URL . "sneakers");
     },
     "/^sneakers$/" => function ($method) {
-        SneakersController::index();
+        ProductController::displayAllActive();
+    },
+    "/^sneakers\/(\d+)$/" => function ($method, $id) {
+        ProductController::productDetail($id);
     },
     "/^login$/" => function ($method) {
         UserController::login();
@@ -45,23 +48,35 @@ $urlsSales = [
     "/^sales$/" => function ($method) {
         SalesController::dashboard();
     },
-    "/^sales\/users$/" => function ($method) {
-        SalesController::users();
+    "/^sales\/products$/" => function ($method) {
+        ProductController::displayAllSales();
+    },
+    "/^sales\/products\/(\d+)$/" => function ($method, $id) {
+        ProductController::productDetail($id);
+    },
+    "/^sales\/products\/add$/" => function ($method) {
+        ProductController::productAdd();
+    },
+    "/^sales\/products\/edit\/(\d+)$/" => function ($method, $id) {
+        ProductController::productEdit(array('id' => $id));
+    },
+    "/^sales\/products\/delete$/" => function ($method) {
+        ProductController::productDelete();
     },
     "/^sales\/orders$/" => function ($method) {
         SalesController::orders();
     },
-    "/^sales\/sneakers\/(\d+)$/" => function ($method, $id) {
-        SneakersController::get($id);
+    "/^sales\/users$/" => function ($method) {
+        SalesController::users();
     },
-    "/^sales\/sneakers\/add$/" => function ($method) {
-        SneakersController::add();
+    "/^admin\/salesmen\/add$/" => function ($method) {
+        SalesController::userAdd();
     },
-    "/^sales\/sneakers\/edit\/(\d+)$/" => function ($method, $id) {
-        SneakersController::edit(array('id' => $id));
+    "/^admin\/salesmen\/edit\/(\d+)$/" => function ($method) {
+        SalesController::userEdit();
     },
-    "/^sales\/sneakers\/delete$/" => function ($method) {
-        SneakersController::delete();
+    "/^sales\/salesmen\/delete$/" => function ($method) {
+        SalesController::userDelete();
     },
 ];
 
