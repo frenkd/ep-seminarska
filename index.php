@@ -120,14 +120,14 @@ $urlsAdmin = [
     "/^admin\/salesmen$/" => function ($method) {
         AdminController::salesmen();
     },
-    "/^admin\/salesmen\/add$/" => function ($method) {
-        AdminController::salesmenAdd();
+    "/^admin\/salesman\/add$/" => function ($method) {
+        AdminController::salesmanAdd();
     },
-    "/^admin\/salesmen\/edit\/(\d+)$/" => function ($method) {
-        AdminController::salesmenEdit();
+    "/^admin\/salesman\/edit\/(\d+)$/" => function ($method, $id) {
+        AdminController::salesmanEdit($id);
     },
-    "/^sales\/salesmen\/delete$/" => function ($method) {
-        AdminController::salesmenDelete();
+    "/^sales\/salesman\/delete$/" => function ($method) {
+        AdminController::salesmanDelete();
     },
 ];
 

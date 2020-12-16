@@ -78,9 +78,16 @@ class UserDB extends AbstractDB {
             . " VALUES (:name, :surname, :email, :password, :active, :idAddress, :idRole)", $params);
     }
 
-    public static function update(array $params) {
-        AddressDB::update($params);
+    public static function registerSalesman(array $params) {
+        $params["idRole"] = 2; // Salesman
+        $params["active"] = 1; // Default when registering: Active
+        $params["password"] = password_hash($params["password"], PASSWORD_BCRYPT);
+        return parent::modify(
+            "INSERT INTO User (name, surname, email, password, active, idRole) "
+            . " VALUES (:name, :surname, :email, :password, :active, :idRole)", $params);
+    }
 
+    public static function update(array $params) {
         if ($params['password'] == "") {
             return parent::modify("UPDATE User SET"
                 . " name = :name,"
@@ -99,8 +106,6 @@ class UserDB extends AbstractDB {
                 . " active = :active"
                 . " WHERE id = :id", $params);
         }
-
-        
     }
 
     public static function updateSettingsSuperuser(array $params) {

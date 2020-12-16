@@ -19,7 +19,7 @@
                 <td><?= $u["active"] ?> </td>
                 <td><?= $u["role"] ?> </td>
                 <td>
-                    <a href="<?= BASE_URL . "admin/salesmen/" . $u["id"] ?>">Edit</a>
+                    <a href="<?= BASE_URL . "admin/salesman/edit/" . $u["id"] ?>">Edit</a>
                 </td>
             </tr>
         <?php endforeach; ?>

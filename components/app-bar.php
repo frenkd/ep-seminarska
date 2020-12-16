@@ -30,6 +30,7 @@
 <!-- Admin options -->
 <?php if (isset($_SESSION['idUser']) && $_SESSION['role'] == 'Administrator'): ?>
     <a href="<?= BASE_URL . "admin/salesmen" ?>">Salesmen</a> |
+    <a href="<?= BASE_URL . "admin/salesman/add" ?>">Add salesman</a> |
 <?php endif; ?>
 
 <!-- Settings and logout -->

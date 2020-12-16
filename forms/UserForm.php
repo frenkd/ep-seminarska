@@ -154,6 +154,31 @@ class RegisterForm extends UserAbstractForm {
 
 }
 
+class RegisterFormSuperuser extends UserAbstractForm {
+
+    public $id;
+
+    public function __construct($id) {
+        parent::__construct($id);
+
+        $this->fs->setLabel('New salesman');
+
+        $this->button = new HTML_QuickForm2_Element_InputSubmit(null);
+        $this->button->setAttribute('value', 'Register');
+
+        $this->password->addRule('required', 'Choose a password.');
+        $this->password2->addRule('required', 'Repeat password.');
+
+        $this->personal->addElement($this->name);
+        $this->personal->addElement($this->surname);
+        $this->account->addElement($this->email);
+        $this->account->addElement($this->password);
+        $this->account->addElement($this->password2);
+        $this->fs->addElement($this->button);
+    }
+
+}
+
 class UserEditFormSales extends UserAbstractForm {
 
     public $id;
@@ -189,6 +214,37 @@ class UserEditFormSales extends UserAbstractForm {
         $this->account->addElement($this->password2);
         $this->address->addElement($this->street);
         $this->address->addElement($this->idPost);
+        $this->fs->addElement($this->button);
+    }
+
+}
+
+class UserEditFormAdmin extends UserAbstractForm {
+
+    public $id;
+
+    public function __construct($id) {
+        parent::__construct($id);
+
+        $this->fs->setLabel('Edit personal info of salesman');
+
+        $this->button = new HTML_QuickForm2_Element_InputSubmit(null);
+        $this->button->setAttribute('value', 'Confirm');
+
+        $this->id = new HTML_QuickForm2_Element_InputHidden("id");
+        $this->addElement($this->id);
+
+        $this->active = new HTML_QuickForm2_Element_Select('active');
+        $this->active->loadOptions(array('1' => 'Yes', '0' => 'No'));
+        $this->active->setLabel('Is active');
+        $this->active->addRule('required', 'Provide some text.');
+
+        $this->personal->addElement($this->name);
+        $this->personal->addElement($this->surname);
+        $this->account->addElement($this->email);
+        $this->account->addElement($this->active);
+        $this->account->addElement($this->password);
+        $this->account->addElement($this->password2);
         $this->fs->addElement($this->button);
     }
 
