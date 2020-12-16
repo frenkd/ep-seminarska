@@ -223,36 +223,25 @@ class SalesmanEditForm extends UserAbstractForm {
 }
 
 
-class UserDeleteForm extends UserAbstractForm {
+class UserDeleteForm extends HTML_QuickForm2 {
 
     public $id;
 
     public function __construct($id) {
-        parent::__construct($id);
-
-        $this->fs->setLabel('Edit personal info of user');
-
-        $this->address = new HTML_QuickForm2_Container_Fieldset();
-        $this->address->setLabel('Address data');
-        $this->fs->addElement($this->address);
-
-        $this->button = new HTML_QuickForm2_Element_InputSubmit(null);
-        $this->button->setAttribute('value', 'Confirm');
+        parent::__construct($id, "post", ["action" => BASE_URL . "sales/user/delete"]);
 
         $this->id = new HTML_QuickForm2_Element_InputHidden("id");
         $this->addElement($this->id);
 
-        $this->idAddress = new HTML_QuickForm2_Element_InputHidden("idAddress");
-        $this->addElement($this->idAddress);
+        $this->confirmation = new HTML_QuickForm2_Element_InputCheckbox("confirmation");
+        $this->confirmation->setLabel('Delete?');
+        $this->confirmation->addRule('required', 'Tick if you want to delete sneaker.');
+        $this->addElement($this->confirmation);
 
-        $this->personal->addElement($this->name);
-        $this->personal->addElement($this->surname);
-        $this->account->addElement($this->email);
-        $this->account->addElement($this->password);
-        $this->account->addElement($this->password2);
-        $this->address->addElement($this->street);
-        $this->address->addElement($this->idPost);
-        $this->fs->addElement($this->button);
+        $this->button = new HTML_QuickForm2_Element_InputSubmit(null);
+        $this->button->setAttribute('value', 'Confirm');
+
+        $this->addElement($this->button);
     }
 
 }

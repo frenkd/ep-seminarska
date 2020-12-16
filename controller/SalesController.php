@@ -19,6 +19,19 @@ class SalesController {
             "orders" => OrdersDB::getAllInfo()
         ]);
     }
+    
+    public static function userAdd() {
+        $form = new RegisterForm("register_form");
+
+        if ($form->validate()) {
+            UserDB::register($form->getValue());
+            ViewHelper::redirect(BASE_URL . "sales/users");
+        } else {
+            echo ViewHelper::render("view/register.php", [
+                "form" => $form
+            ]);
+        }
+    }
 
     public static function userEdit($id) {
         //var_dump($id);
@@ -54,20 +67,22 @@ class SalesController {
     }
 
     public static function userDelete() {
-        $form = new ProductDeleteForm("delete_form");
+        $form = new UserDeleteForm("delete_user_form");
         $data = $form->getValue();
-        var_dump($data);
 
         if ($form->isSubmitted() && $form->validate()) {
-            ProductDB::delete($data);
-            ViewHelper::redirect(BASE_URL . "sneakers");
+            try {
+                UserDB::deleteUser($data);
+                ViewHelper::redirect(BASE_URL . "sales/users");
+            } catch (Exception $e) {
+                echo ("Cannot delete this product (it has probably been ordered)");
+            }
         } else {
             if (isset($data["id"])) {
-                $url = BASE_URL . "sneakers/edit/" . $data["id"];
+                $url = BASE_URL . "sales/user/edit/" . $data["id"];
             } else {
-                $url = BASE_URL . "sneakers";
+                $url = BASE_URL . "sales/users";
             }
-
             ViewHelper::redirect($url);
         }
     }

@@ -151,4 +151,8 @@ class UserDB extends AbstractDB {
         }
     }
 
+    public static function deleteUser(array $id) {
+        return parent::modify("DELETE FROM User WHERE id = :id", $id);
+    }
+
 }

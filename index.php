@@ -108,8 +108,8 @@ $urlsSales = [
     "/^sales\/user\/edit\/(\d+)$/" => function ($method, $id) {
         SalesController::userEdit($id);
     },
-    "/^sales\/user\/delete$/" => function ($method, $id) {
-        SalesController::userDelete($id);
+    "/^sales\/user\/delete$/" => function ($method) {
+        SalesController::userDelete();
     },
 ];
 
