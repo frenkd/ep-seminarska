@@ -5,14 +5,24 @@ require_once("ViewHelper.php");
 require_once("model/UserDB.php");
 
 class AdminController {
+
+    public static function checkPermission() {
+        $role = $_SESSION['role'];
+        if ($role != 'Administrator') {
+            ViewHelper::redirect(BASE_URL);
+            exit();
+        }
+    }
     
     public static function salesmen() {
+        self::checkPermission();
         echo ViewHelper::render("view/salesmen-list.php", [
             "salesmen" => UserDB::getAllSalesmen()
         ]);
     }
     
     public static function salesmanAdd() {
+        self::checkPermission();
         $form = new RegisterFormSuperuser("register_form");
 
         if ($form->validate()) {
@@ -26,7 +36,7 @@ class AdminController {
     }
 
     public static function salesmanEdit($id) {
-        //var_dump($id);
+        self::checkPermission();
         $editForm = new UserEditFormAdmin("edit_user_form");
         $deleteForm = new UserDeleteForm("delete_user_form");
 
@@ -59,6 +69,7 @@ class AdminController {
     }
 
     public static function salesmenDelete() {
+        self::checkPermission();
         $form = new UserDeleteForm("delete_user_form");
         $data = $form->getValue();
 

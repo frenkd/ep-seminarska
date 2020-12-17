@@ -12,45 +12,6 @@ require_once("model/CartDB.php");
 
 class UserController {
     
-    public static function login() {
-        $form = new LoginForm("login_form");
-
-        if ($form->validate()) {
-
-            try {
-                $user = UserDB::login($form->getValue());
-                $_SESSION['email'] = $user['email'];
-                $_SESSION['name'] = $user['name'];
-                $_SESSION['idUser'] = $user['id'];
-                $_SESSION['role'] = $user['role'];
-                // echo '<script>alert("' . $user['name'] . '")</script>';
-                ViewHelper::redirect(BASE_URL . "sneakers/" . $id);
-            } catch (Exception $e) {
-                echo '<script>alert("' . $e->getMessage() . '")</script>';
-                echo ViewHelper::render("view/login.php", [
-                    "form" => $form
-                ]);
-            }
-        } else {
-            echo ViewHelper::render("view/login.php", [
-                "form" => $form
-            ]);
-        }
-    }
-
-    public static function register() {
-        $form = new RegisterForm("register_form");
-
-        if ($form->validate()) {
-            UserDB::register($form->getValue());
-            ViewHelper::redirect(BASE_URL . "login");
-        } else {
-            echo ViewHelper::render("view/register.php", [
-                "form" => $form
-            ]);
-        }
-    }
-
     public static function settings() {
         $formUser = new UserEditForm("settings_form_superuser");
         $formSuperuser = new SalesmanEditForm("settings_form_user");

@@ -3,11 +3,10 @@
 // enables sessions for the entire app
 session_start();
 
-require_once("controller/ProductController.php");
+require_once("controller/AnonController.php");
 require_once("controller/UserController.php");
 require_once("controller/SalesController.php");
 require_once("controller/AdminController.php");
-require_once("controller/BooksRESTController.php");
 
 define("BASE_URL", rtrim($_SERVER["SCRIPT_NAME"], "index.php"));
 define("IMAGES_URL", rtrim($_SERVER["SCRIPT_NAME"], "index.php") . "static/images/");
@@ -21,16 +20,25 @@ $urlsAnon = [
         ViewHelper::redirect(BASE_URL . "sneakers");
     },
     "/^sneakers$/" => function ($method) {
-        ProductController::displayAllActive();
+        AnonController::displayAllActive();
     },
     "/^sneakers\/(\d+)$/" => function ($method, $id) {
-        ProductController::productDetail($id);
+        AnonController::productDetail($id);
     },
     "/^login$/" => function ($method) {
-        UserController::login();
+        AnonController::login();
+    },
+    "/^admin\/login$/" => function ($method) {
+        AnonController::loginAdmin();
+    },
+    "/^sales\/login$/" => function ($method) {
+        AnonController::loginSales();
+    },
+    "/^user\/login$/" => function ($method) {
+        AnonController::loginUser();
     },
     "/^register$/" => function ($method) {
-        UserController::register();
+        AnonController::register();
     },
 ];
 
@@ -92,19 +100,19 @@ $urlsSales = [
         SalesController::dashboard();
     },
     "/^sales\/products$/" => function ($method) {
-        ProductController::displayAllSales();
+        SalesController::products();
     },
     "/^sales\/product\/(\d+)$/" => function ($method, $id) {
-        ProductController::productDetail($id);
+        SalesController::productDetail($id);
     },
     "/^sales\/product\/add$/" => function ($method) {
-        ProductController::productAdd();
+        SalesController::productAdd();
     },
     "/^sales\/product\/edit\/(\d+)$/" => function ($method, $id) {
-        ProductController::productEdit(array('id' => $id));
+        SalesController::productEdit(array('id' => $id));
     },
     "/^sales\/product\/delete$/" => function ($method) {
-        ProductController::productDelete(['id' => $_POST['id']]);
+        SalesController::productDelete(['id' => $_POST['id']]);
     },
     "/^sales\/orders$/" => function ($method) {
         SalesController::orders();
@@ -148,37 +156,12 @@ $urlsAdmin = [
     "/^admin\/salesman\/edit\/(\d+)$/" => function ($method, $id) {
         AdminController::salesmanEdit($id);
     },
-    "/^sales\/salesman\/delete$/" => function ($method) {
+    "/^admin\/salesman\/delete$/" => function ($method) {
         AdminController::salesmanDelete();
     },
 ];
 
-$urlsREST = [
-    # REST API
-    "/^api\/books\/(\d+)$/" => function ($method, $id) {
-        // TODO: izbris knjige z uporabo HTTP metode DELETE
-        switch ($method) {
-            case "PUT":
-                BooksRESTController::edit($id);
-                break;
-            default: # GET
-                BooksRESTController::get($id);
-                break;
-        }
-    },
-    "/^api\/books$/" => function ($method) {
-        switch ($method) {
-            case "POST":
-                BooksRESTController::add();
-                break;
-            default: # GET
-                BooksRESTController::index();
-                break;
-        }
-    }
-];
-
-$urls = array_merge($urlsAnon, $urlsUser, $urlsSales, $urlsAdmin, $urlsREST);
+$urls = array_merge($urlsAnon, $urlsUser, $urlsSales, $urlsAdmin);
 
 foreach ($urls as $pattern => $controller) {
     if (preg_match($pattern, $path, $params)) {
