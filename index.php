@@ -43,10 +43,17 @@ $urlsUser = [
         ViewHelper::redirect(BASE_URL . "sneakers");
     },
     "/^user\/orders$/" => function ($method) {
-        UserController::orders();
+        $params = [
+            'idUser' => $_SESSION['idUser']
+        ];
+        UserController::orders($params);
     },
     "/^user\/order\/(\d+)$/" => function ($method, $id) {
-        UserController::orderDetails($id);
+        $params = [
+            'idOrder' => $id,
+            'idUser' => $_SESSION['idUser']
+        ];
+        UserController::orderDetails($params);
     },
     "/^user\/cartPurge$/" => function ($method) {
         $previousUrl = $_POST['previousUrl'];

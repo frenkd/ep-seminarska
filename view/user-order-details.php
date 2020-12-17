@@ -16,8 +16,8 @@
                 <td><?= $u["title"] ?> </td>
                 <td><?= $u["company"] ?> </td>
                 <td><?= $u["color"] ?> </td>
-                <td><?= $u["price"] ?> </td>
                 <td><?= $u["size"] ?> </td>
+                <td><?= $u["price"] ?> </td>
                 <td><?= $u["quantity"] ?> </td>
                 <td><?= $u["amount"] ?> </td>
             </tr>

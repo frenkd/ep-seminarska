@@ -102,16 +102,22 @@ class UserController {
         }
     }
 
-    public static function orders() {
+    public static function orders($params) {
         echo ViewHelper::render("view/user-order-list.php", [
-            "orders" => OrdersDB::getUserOrders(['idUser' => $_SESSION['idUser']])
+            "orders" => OrdersDB::getUserOrders(['idUser' => $params['idUser']])
         ]);
     }
 
-    public static function orderDetails($id) {
-        echo ViewHelper::render("view/user-order-details.php", [
-            "orderItems" => OrdersDB::getOrderItems(['id' => $id])
-        ]);
+    public static function orderDetails($params) {
+        try {
+            echo ViewHelper::render("view/user-order-details.php", [
+                "orderItems" => OrdersDB::getOrderItems($params)
+            ]);
+        }
+        catch (Exception $e) {
+            ViewHelper::redirect(BASE_URL . "user/orders");
+        }
+        
     }
 
     public static function cartAddItem($params) {
@@ -142,7 +148,7 @@ class UserController {
 
     public static function checkout($idUser) {
         CartDB::checkout(['idUser' => $idUser]);
-        ViewHelper::redirect(BASE_URL . "sales/orders");
+        ViewHelper::redirect(BASE_URL . "user/orders");
     }
 
     

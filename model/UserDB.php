@@ -137,6 +137,7 @@ class UserDB extends AbstractDB {
             . " User.name as name,"
             . " User.email as email,"
             . " User.password as password,"
+            . " User.active as active,"
             . " Role.role as role"
             . " FROM User"
             . " LEFT JOIN Role ON User.idRole = Role.id"
@@ -145,11 +146,14 @@ class UserDB extends AbstractDB {
         if (count($users) == 1) {
             $user = $users[0];
             // check if the password on the database matches the given password
-            if (password_verify ($params["password"] , $user["password"])) {
+            if (password_verify($params["password"], $user["password"]) && $user["active"] == '1') {
                 return $user;
             }
-            else {
+            else if ($user["active"] == '1') {
                 throw new InvalidArgumentException("Incorrect password");
+            }
+            else if ($user["active"] == '0') {
+                throw new InvalidArgumentException("This account has been disabled");
             }
         } else {
             throw new InvalidArgumentException("No user with such user info");
