@@ -11,8 +11,21 @@ require_once("model/CartDB.php");
 
 
 class UserController {
+
+    public static function checkPermission() {
+        $role = $_SESSION['role'];
+        if ($role != 'Registred user') {
+            ViewHelper::redirect(BASE_URL);
+            exit();
+        }
+    }
     
     public static function settings() {
+        if (!isset($_SESSION['role'])) {
+            ViewHelper::redirect(BASE_URL);
+            exit();
+        }
+
         $formUser = new UserEditForm("settings_form_superuser");
         $formSuperuser = new SalesmanEditForm("settings_form_user");
         if ($formUser->isSubmitted()) {
@@ -64,12 +77,14 @@ class UserController {
     }
 
     public static function orders($params) {
+        self::checkPermission();
         echo ViewHelper::render("view/user-order-list.php", [
             "orders" => OrdersDB::getUserOrders(['idUser' => $params['idUser']])
         ]);
     }
 
     public static function orderDetails($params) {
+        self::checkPermission();
         try {
             echo ViewHelper::render("view/user-order-details.php", [
                 "orderItems" => OrdersDB::getOrderItems($params)
@@ -82,24 +97,26 @@ class UserController {
     }
 
     public static function cartAddItem($params) {
-        // TODO: Add item to cart (increment)
+        self::checkPermission();
         CartDB::cartAddItem($params);
         ViewHelper::redirect($params['previousUrl']);
     }
 
     public static function cartUpdateItem($params) {
-        // TODO: Update cart
+        self::checkPermission();
         CartDB::cartUpdateQuantity($params);
         ViewHelper::redirect($params['previousUrl']);
     }
 
     public static function cartPurge($idUser, $previousUrl) {
+        self::checkPermission();
         var_dump($idUser);
         CartDB::cartPurge(['idUser' => $idUser]);
         ViewHelper::redirect($previousUrl);
     }
 
     public static function checkoutView($idUser) {
+        self::checkPermission();
         $checkoutForm = new CheckoutForm("confirm_checkout_form",);
         echo ViewHelper::render("view/checkout.php", [
             "orderItems" => OrdersDB::getCartItems(['id' => $idUser]),
@@ -108,6 +125,7 @@ class UserController {
     }
 
     public static function checkout($idUser) {
+        self::checkPermission();
         CartDB::checkout(['idUser' => $idUser]);
         ViewHelper::redirect(BASE_URL . "user/orders");
     }
