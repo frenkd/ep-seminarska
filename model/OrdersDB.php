@@ -31,7 +31,7 @@ class OrdersDB extends AbstractDB {
             . " FROM Orders"
             . " LEFT JOIN User ON Orders.idUser = User.id"
             . " LEFT JOIN OrderStatus ON OrderStatus.id = Orders.idStatus"
-            . " WHERE Orders.id = :id"
+            . " WHERE Orders.id = :idOrder"
             . " ORDER BY id ASC", $id);
         if (count($orders) == 1) {
             return $orders[0];

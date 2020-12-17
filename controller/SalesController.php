@@ -107,9 +107,9 @@ class SalesController {
     public static function orderDetails(array $id) {
         self::checkPermission();
 
-        $confirmForm = new OrderStatusForm("confirm_order_form", $id['id'], "confirm");
-        $cancelForm = new OrderStatusForm("cancel_order_form", $id['id'], "cancel");
-        $revokeForm = new OrderStatusForm("revoke_order_form", $id['id'], "revoke");
+        $confirmForm = new OrderStatusForm("confirm_order_form", $id['idOrder'], "confirm");
+        $cancelForm = new OrderStatusForm("cancel_order_form", $id['idOrder'], "cancel");
+        $revokeForm = new OrderStatusForm("revoke_order_form", $id['idOrder'], "revoke");
 
         $params = [
             "order" => OrdersDB::get($id),

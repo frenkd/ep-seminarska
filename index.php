@@ -118,7 +118,11 @@ $urlsSales = [
         SalesController::orders();
     },
     "/^sales\/order\/(\d+)$/" => function ($method, $id) {
-        SalesController::orderDetails(['id' => $id]);
+        $params = [
+            'idOrder' => $id,
+            'idUser' => $_POST['idUser']
+        ];
+        SalesController::orderDetails($params);
     },
     "/^sales\/order\/confirm$/" => function ($method) {
         SalesController::updateOrderStatus(['idOrder' => $_POST['idOrder'], 'idStatus' => '2']);

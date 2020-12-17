@@ -19,7 +19,10 @@
                 <td><?= $u["email"] ?> </td>
                 <td><?= $u["amount"] ?> </td>
                 <td>
-                    <a href="<?= BASE_URL . "sales/order/" . $u["id"] ?>">Edit</a>
+                <form action="<?= BASE_URL . "sales/order/" . $u["id"] ?>" method="post">
+                    <input type="hidden" name="idUser" value="<?= $u["idUser"] ?>"/>
+                    <a href="javascript:;" onclick="parentNode.submit();">Edit</a>
+                </form>
                 </td>
             </tr>
         <?php endforeach; ?>
