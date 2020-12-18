@@ -40,6 +40,12 @@ $urlsAnon = [
     "/^register$/" => function ($method) {
         AnonController::register();
     },
+    "/^register\/confirm$/" => function ($method) {
+        $params = [
+            'captcha' => $_POST['g-recaptcha-response']
+        ];
+        AnonController::registerConfirm($params);
+    },
 ];
 
 $urlsUser = [

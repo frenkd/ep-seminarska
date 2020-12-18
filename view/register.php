@@ -1,3 +1,5 @@
 <h2>Register</h2>
 
-<?= $form ?>
+<?= isset($form) ? $form : "" ?>
+
+<?= isset($captcha) ? include "components/captcha.php" : "" ?>

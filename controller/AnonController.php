@@ -122,12 +122,34 @@ class AnonController {
         $form = new RegisterForm("register_form");
 
         if ($form->validate()) {
-            UserDB::register($form->getValue());
-            ViewHelper::redirect(BASE_URL . "login");
+            $_SESSION['formValues'] = $form->getValue();
+            //UserDB::register($form->getValue());
+            self::registerCaptcha();
         } else {
             echo ViewHelper::render("view/register.php", [
                 "form" => $form
             ]);
+        }
+    }
+
+    public static function registerCaptcha() {
+        echo ViewHelper::render("view/register.php", [
+            "captcha" => TRUE
+        ]);
+    }
+
+    public static function registerConfirm($params) {
+        $secret = '';
+        if($params['captcha']){
+            $captcha = $params['captcha'];
+            $response = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=".$secret."&response={$captcha}&remoteip=".$_SERVER['REMOTE_ADDR']);
+            $g_response = json_decode($response);
+            if ($g_response->success === true) {
+                UserDB::register($_SESSION['formValues']);
+                echo ViewHelper::render("view/login.php");
+            } else {
+                self::register();
+            }
         }
     }
 
