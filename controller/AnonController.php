@@ -139,18 +139,52 @@ class AnonController {
     }
 
     public static function registerConfirm($params) {
-        $secret = '';
+        require 'secret_keys.php';
+        require 'model/Mail.php';
+
         if($params['captcha']){
             $captcha = $params['captcha'];
-            $response = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=".$secret."&response={$captcha}&remoteip=".$_SERVER['REMOTE_ADDR']);
+            $response = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=".$secretEPseminarska['secretCAPTCHA']."&response={$captcha}&remoteip=".$_SERVER['REMOTE_ADDR']);
             $g_response = json_decode($response);
             if ($g_response->success === true) {
-                UserDB::register($_SESSION['formValues']);
-                echo ViewHelper::render("view/login.php");
+
+                try {
+                    UserDB::register($_SESSION['formValues']);
+                    $confirmHash = hash('ripemd160', $_SESSION['formValues']['email'].$secretEPseminarska['confirmationSecret']);
+                    $mailLink = 'localhost'.BASE_URL.'register/complete?mail='.$_SESSION['formValues']['email'].'&hash='.$confirmHash;
+                    $mailParams = [
+                        'mailAddress' => $_SESSION['formValues']['email'],
+                        'mailName' => $_SESSION['formValues']['name'].' '.$_SESSION['formValues']['surname'],
+                        'mailLink' => $mailLink
+                    ];
+                    sendConfirmationMail($mailParams);
+                    echo 'Sent confirmation email. Click the link to continue';
+                }
+                catch (Exception $e) {
+                    echo '<script>alert("' . $e->getMessage() . '")</script>';
+                    ViewHelper::redirect(BASE_URL . "sneakers");
+                }
             } else {
                 self::register();
+                echo 'You are a robot, according to reCAPACHA. Begone!';
             }
         }
     }
+
+    public static function registerComplete($params) {
+        require 'secret_keys.php';
+
+        //check if the inputed hash matches the one in the database
+        $confirmTruth = hash('ripemd160', $params['mail'].$secretEPseminarska['confirmationSecret']);
+        $confirmHashInput = $params['hash'];
+        if ($confirmTruth == $confirmHashInput) {
+            echo 'You have been sucessfuly registred!';
+            UserDB::activateUser(['email' => $params['mail']]);
+        }
+        else {
+            echo 'Could not confirm user!';
+        }
+    }
+
 
 }

@@ -46,6 +46,11 @@ $urlsAnon = [
         ];
         AnonController::registerConfirm($params);
     },
+    "/^register\/complete(.*)$/" => function ($method) {
+        $queries = array();
+        parse_str($_SERVER['QUERY_STRING'], $queries);
+        AnonController::registerComplete($queries);
+    },
 ];
 
 $urlsUser = [
