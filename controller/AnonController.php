@@ -123,7 +123,6 @@ class AnonController {
 
         if ($form->validate()) {
             $_SESSION['formValues'] = $form->getValue();
-            //UserDB::register($form->getValue());
             self::registerCaptcha();
         } else {
             echo ViewHelper::render("view/register.php", [
@@ -147,7 +146,6 @@ class AnonController {
             $response = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=".$secretEPseminarska['secretCAPTCHA']."&response={$captcha}&remoteip=".$_SERVER['REMOTE_ADDR']);
             $g_response = json_decode($response);
             if ($g_response->success === true) {
-
                 try {
                     UserDB::register($_SESSION['formValues']);
                     $confirmHash = hash('ripemd160', $_SESSION['formValues']['email'].$secretEPseminarska['confirmationSecret']);
@@ -157,16 +155,23 @@ class AnonController {
                         'mailName' => $_SESSION['formValues']['name'].' '.$_SESSION['formValues']['surname'],
                         'mailLink' => $mailLink
                     ];
+                    ViewHelper::render("view/pager.php", [
+                        "title" => "Registration instructions",
+                        "content" => "Confirmation mail has been sent. Click the link in your email to continue."
+                    ]);
                     sendConfirmationMail($mailParams);
-                    echo 'Sent confirmation email. Click the link to continue';
-                }
-                catch (Exception $e) {
-                    echo '<script>alert("' . $e->getMessage() . '")</script>';
-                    ViewHelper::redirect(BASE_URL . "sneakers");
+                } catch (Exception $e) {
+                    echo ViewHelper::render("view/pager.php", [
+                        "title" => "Error",
+                        "content" => $e->getMessage()
+                    ]);
                 }
             } else {
                 self::register();
-                echo 'You are a robot, according to reCAPACHA. Begone!';
+                ViewHelper::render("view/pager.php", [
+                    "title" => "Whoops!",
+                    "content" => "You are a robot, according to reCAPACHA. Begone foul machine!"
+                ]);
             }
         }
     }
@@ -178,11 +183,17 @@ class AnonController {
         $confirmTruth = hash('ripemd160', $params['mail'].$secretEPseminarska['confirmationSecret']);
         $confirmHashInput = $params['hash'];
         if ($confirmTruth == $confirmHashInput) {
-            echo 'You have been sucessfuly registred!';
+            echo ViewHelper::render("view/pager.php", [
+                "title" => "Registration completed",
+                "content" => "You have been sucessfuly registred!"
+            ]);
             UserDB::activateUser(['email' => $params['mail']]);
         }
         else {
-            echo 'Could not confirm user!';
+            echo ViewHelper::render("view/pager.php", [
+                "title" => "Registration error",
+                "content" => "Could not confirm user."
+            ]);
         }
     }
 

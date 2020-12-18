@@ -15,7 +15,6 @@ require 'vendor/autoload.php';
 function sendConfirmationMail(array $params) {
     // $params = mailAddress, mailName
 
-
     //Create a new PHPMailer instance
     $mail = new PHPMailer();
 
@@ -72,7 +71,9 @@ function sendConfirmationMail(array $params) {
     if (!$mail->send()) {
         echo 'Mailer Error: ' . $mail->ErrorInfo;
     } else {
-        echo 'Message sent!';
+        include("components/app-bar.php");
+        echo "<br>";
+        echo 'Confirmation mail sent!';
     }
 }
 
