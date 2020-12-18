@@ -167,11 +167,7 @@ class AnonController {
                     ]);
                 }
             } else {
-                self::register();
-                ViewHelper::render("view/pager.php", [
-                    "title" => "Whoops!",
-                    "content" => "You are a robot, according to reCAPACHA. Begone foul machine!"
-                ]);
+                ViewHelper::redirect(BASE_URL);
             }
         }
     }

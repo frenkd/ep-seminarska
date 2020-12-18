@@ -73,7 +73,7 @@ function sendConfirmationMail(array $params) {
     } else {
         include("components/app-bar.php");
         echo "<br>";
-        echo 'Confirmation mail sent!';
+        echo 'Confirmation mail sent to '.$params['mailAddress'];
     }
 }
 
