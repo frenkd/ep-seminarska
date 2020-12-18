@@ -14,7 +14,7 @@ class UserController {
 
     public static function checkPermission() {
         $role = $_SESSION['role'];
-        if ($role != 'Registred user') {
+        if ($role != 'Registred customer') {
             ViewHelper::redirect(BASE_URL);
             exit();
         }

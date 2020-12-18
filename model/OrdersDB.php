@@ -12,7 +12,7 @@ class OrdersDB extends AbstractDB {
             . " Orders.timestamp as timestamp,"
             . " Orders.idUser as idUser,"
             . " User.email as email,"
-            . " (SELECT SUM(price) FROM OrderItem WHERE OrderItem.idOrder = Orders.id) as amount"
+            . " (SELECT SUM(price * quantity) FROM OrderItem WHERE OrderItem.idOrder = Orders.id) as amount"
             . " FROM Orders"
             . " LEFT JOIN User ON Orders.idUser = User.id"
             . " LEFT JOIN OrderStatus ON OrderStatus.id = Orders.idStatus"
