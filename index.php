@@ -186,11 +186,19 @@ foreach ($urls as $pattern => $controller) {
         } catch (InvalidArgumentException $e) {
             ViewHelper::error404();
         } catch (Exception $e) {
-            ViewHelper::displayError($e, true);
+            // ViewHelper::displayError($e, true);
+            echo ViewHelper::render("view/pager.php", [
+                "title" => "Website error",
+                "content" => "Error #13378, please contact the administrator."
+            ]);
         }
 
         exit();
     }
 }
 
-ViewHelper::displayError(new InvalidArgumentException("No controller matched."), true);
+// ViewHelper::displayError(new InvalidArgumentException("No controller matched."), true);
+echo ViewHelper::render("view/pager.php", [
+    "title" => "Website error",
+    "content" => "Error #5298765, please contact the administrator."
+]);
