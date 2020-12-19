@@ -119,4 +119,27 @@ class ProductDB extends AbstractDB {
                         . " ORDER BY id ASC", $prefix);
     }
 
+    public static function search($params) {
+        $params = [
+            'query1' => $params['query'],
+            'query2' => $params['query'],
+            'query3' => $params['query'],
+            'query4' => $params['query']
+        ];
+        return parent::query(
+            "SELECT"
+            ." p.id, p.title, p.description, p.size,"
+            ." p.price, p.active, p.idCompany, p.idColor,"
+            ." Color.name as color, Company.name as company"
+            . " FROM Product p"
+            . " LEFT JOIN Company ON Company.id = p.idCompany"
+            . " LEFT JOIN Color ON Color.id = p.idColor"
+            . " WHERE (MATCH (p.title) AGAINST (:query1 IN BOOLEAN MODE)"
+            . " OR MATCH (p.description) AGAINST (:query2 IN BOOLEAN MODE)"
+            . " OR MATCH (Company.name) AGAINST (:query3 IN BOOLEAN MODE)"
+            . " OR MATCH (Color.name) AGAINST (:query4 IN BOOLEAN MODE))"
+            . " AND p.active = '1'"
+            . " ORDER BY id ASC", $params);
+    }
+
 }

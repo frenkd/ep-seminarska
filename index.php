@@ -52,6 +52,11 @@ $urlsAnon = [
         parse_str($_SERVER['QUERY_STRING'], $queries);
         AnonController::registerComplete($queries);
     },
+    "/^search$/" => function ($method) {
+        $queries = array();
+        parse_str($_SERVER['QUERY_STRING'], $queries);
+        AnonController::search($queries);
+    },
 ];
 
 $urlsUser = [

@@ -4,6 +4,7 @@
 require_once("ViewHelper.php");
 require_once("model/ProductDB.php");
 require_once("forms/ProductForm.php");
+require_once("forms/SearchForm.php");
 
 class AnonController {
     
@@ -189,6 +190,31 @@ class AnonController {
             echo ViewHelper::render("view/pager.php", [
                 "title" => "Registration error",
                 "content" => "Could not confirm user."
+            ]);
+        }
+    }
+
+    public static function search() {
+        $form = new SearchForm("search_form");
+
+        if ($form->validate()) {
+            try {
+                $sneakers = ProductDB::search($form->getValue());
+                if (count($sneakers) < 1) {
+                    throw new Exception('None found.');
+                }
+                echo ViewHelper::render("view/search-results.php", [
+                    "sneakers" => $sneakers
+                ]);
+            } catch (Exception $e) {
+                echo ViewHelper::render("view/pager.php", [
+                    "title" => "Search results",
+                    "content" => "No results were found for this query ..."
+                ]);
+            }
+        } else {
+            echo ViewHelper::render("view/search.php", [
+                "form" => $form
             ]);
         }
     }

@@ -10,6 +10,7 @@
     <a href="<?= BASE_URL . "sneakers" ?>">All sneakers</a> |
     <a href="<?= BASE_URL . "login" ?>">Login</a> |
     <a href="<?= BASE_URL . "register" ?>">Register</a> |
+    <a href="<?= BASE_URL . "search" ?>">Search</a> |
 <?php endif; ?>
 
 <!-- Registred customer options -->
