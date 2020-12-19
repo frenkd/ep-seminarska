@@ -142,6 +142,7 @@ class UserDB extends AbstractDB {
             "SELECT"
             . " User.id as id,"
             . " User.name as name,"
+            . " User.surname as surname,"
             . " User.email as email,"
             . " User.password as password,"
             . " User.active as active,"
@@ -160,10 +161,10 @@ class UserDB extends AbstractDB {
                 throw new InvalidArgumentException("Incorrect password");
             }
             else if ($user["active"] == '0') {
-                throw new InvalidArgumentException("This account has been disabled");
+                throw new DomainException("This account has been disabled");
             }
         } else {
-            throw new InvalidArgumentException("No user with such user info");
+            throw new DomainException("No user with such user info");
         }
     }
 

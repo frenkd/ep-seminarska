@@ -108,10 +108,15 @@ class ProductDB extends AbstractDB {
     }
 
     public static function getAllwithURI(array $prefix) {
-        return parent::query("SELECT id, title, description, size, price, active, idCompany, idColor"
-                        . "CONCAT(:prefix, id) as uri "
-                        . "FROM book "
-                        . "ORDER BY id ASC", $prefix);
+        return parent::query("SELECT p.id, p.title, p.description, p.size, p.price, p.active, p.idCompany, p.idColor,"
+                        . " Company.name as company,"
+                        . " Color.name as color,"
+                        . " CONCAT(:prefix, p.id) as uri"
+                        . " FROM Product p"
+                        . " LEFT JOIN Company ON Company.id = p.idCompany"
+                        . " LEFT JOIN Color ON Color.id = p.idColor"
+                        . " WHERE active = '1'"
+                        . " ORDER BY id ASC", $prefix);
     }
 
 }

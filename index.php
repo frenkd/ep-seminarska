@@ -7,6 +7,7 @@ require_once("controller/AnonController.php");
 require_once("controller/UserController.php");
 require_once("controller/SalesController.php");
 require_once("controller/AdminController.php");
+require_once("controller/RESTController.php");
 
 define("BASE_URL", rtrim($_SERVER["SCRIPT_NAME"], "index.php"));
 define("IMAGES_URL", rtrim($_SERVER["SCRIPT_NAME"], "index.php") . "static/images/");
@@ -176,7 +177,28 @@ $urlsAdmin = [
     },
 ];
 
-$urls = array_merge($urlsAnon, $urlsUser, $urlsSales, $urlsAdmin);
+$urlsREST = [
+    "/^api\/products\/(\d+)$/" => function ($method, $id) {
+        RESTController::get($id);
+    },
+    "/^api\/products$/" => function ($method) {
+        RESTController::index();
+    },
+    "/^api\/enroll$/" => function ($method) {
+        if ($method == "POST") {
+            $params = [
+                'email' => $_POST['email'],
+                'password' => $_POST['password']
+            ];
+            RESTController::login($params);
+        }
+        else {
+            ViewHelper::redirect(BASE_URL);
+        }
+    }
+];
+
+$urls = array_merge($urlsAnon, $urlsUser, $urlsSales, $urlsAdmin, $urlsREST);
 
 foreach ($urls as $pattern => $controller) {
     if (preg_match($pattern, $path, $params)) {
@@ -184,13 +206,10 @@ foreach ($urls as $pattern => $controller) {
             $params[0] = $_SERVER["REQUEST_METHOD"];
             $controller(...$params);
         } catch (InvalidArgumentException $e) {
-            ViewHelper::error404();
+            echo $e;
+            // ViewHelper::error404();
         } catch (Exception $e) {
-            // ViewHelper::displayError($e, true);
-            echo ViewHelper::render("view/pager.php", [
-                "title" => "Website error",
-                "content" => "Error #13378, please contact the administrator."
-            ]);
+            ViewHelper::displayError($e, true);
         }
 
         exit();
@@ -200,5 +219,5 @@ foreach ($urls as $pattern => $controller) {
 // ViewHelper::displayError(new InvalidArgumentException("No controller matched."), true);
 echo ViewHelper::render("view/pager.php", [
     "title" => "Website error",
-    "content" => "Error #5298765, please contact the administrator."
+    "content" => "Error #NoControllerMatched, please contact the administrator."
 ]);
