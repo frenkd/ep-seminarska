@@ -200,7 +200,41 @@ $urlsREST = [
         else {
             ViewHelper::redirect(BASE_URL);
         }
-    }
+    },
+    "/^api\/usr\/(\d+)$/" => function ($method, $id) {
+        RESTController::getUser($id);
+    },
+    "/^api\/usr\/edit$/" => function ($method) {
+        if ($method == "POST") {
+            RESTController::editUser();
+        }
+        else {
+            echo ViewHelper::renderJSON("Something went wrong, 400", '400');
+        }
+    },
+    "/^api\/cart\/add$/" => function ($method) {
+        if ($method == "POST") {
+            RESTController::addToCart();
+        }
+        else {
+            echo ViewHelper::renderJSON("Something went wrong, 400", '400');
+        }
+    },
+    "/^api\/cart\/purge$/" => function ($method) {
+        RESTController::purgeCart();
+    },
+    "/^api\/cart\/items$/" => function ($method) {
+        RESTController::getCart();
+    },
+    "/^api\/cart\/complete$/" => function ($method) {
+        RESTController::completePurchase();
+    },
+    "/^api\/cart\/updatePlus$/" => function ($method) {
+        RESTController::updatePlus();
+    },
+    "/^api\/cart\/updateMinus$/" => function ($method) {
+        RESTController::updateMinus();
+    },
 ];
 
 $urls = array_merge($urlsAnon, $urlsUser, $urlsSales, $urlsAdmin, $urlsREST);

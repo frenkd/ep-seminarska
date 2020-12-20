@@ -38,6 +38,22 @@ class CartDB extends AbstractDB {
         }
     }
 
+    public static function cartSubtractItem(array $params) {
+        $items = parent::query("SELECT quantity, idProduct, idUser"
+        . " FROM CartItem"
+        . " WHERE idProduct = :idProduct AND idUser = :idUser", $params);
+        if (count($items) == 1) {
+            if ($items[0]['quantity'] == "1") {
+                return parent::modify("DELETE FROM CartItem"
+                . " WHERE idUser = :idUser AND idProduct = :idProduct", $items[0]);
+            } else {
+                return parent::modify("UPDATE CartItem SET"
+                . " quantity = :quantity - 1"
+                . " WHERE idUser = :idUser AND idProduct = :idProduct", $items[0]);
+            }
+        }
+    }
+
     public static function cartUpdateQuantity(array $params) {
         if ($params['quantity'] < 1) {
             return parent::modify("DELETE FROM CartItem WHERE idUser = :idUser AND idProduct = :idProduct", $params);
