@@ -1,5 +1,9 @@
-# Konfiguracija ključev
-Potrebna je konfiguracija datoteke "secret_keys" v korenu tega projekta.
+# EP-Seminarska (Electronic business coursework final project @FRI2020)
+Implemented a simple webstore in PHP from scratch, including MySQL database design, REST API implementation and usage of some libraries, such as PHPMailer, reCAPTCHA, QuickForm2 and more.
+
+
+## Key configuration
+You need to edit the "secret_keys" with valid values for the project to run.
 
 ```
 <?php
@@ -14,5 +18,5 @@ $secretEPseminarska = [
 ];
 
 ```
-# Apache
-V konfiguracijske datoteke je potrebno dodati vsebino iz /apacheconf
+## Apache
+You also need to add files from /apacheconf to the Apache server directory.
